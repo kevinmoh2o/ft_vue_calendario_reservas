@@ -9,7 +9,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import esLocale from "@fullcalendar/core/locales/es";
 import useEvents from '../composables/useEvents.js'
 
-const id = ref(10);
+const id = ref(15);
 
 const {getEvents,createEvent,updateEvent,deleteEvent}= useEvents();
 
