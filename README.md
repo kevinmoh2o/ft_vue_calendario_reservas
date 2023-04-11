@@ -25,6 +25,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 # comandos aplicados
 npm install --save @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/list @fullcalendar/core/locales/es
-
+yarn add v-calendar
 npm install -g json-server
 json-server --watch json/data.json --port 3011
