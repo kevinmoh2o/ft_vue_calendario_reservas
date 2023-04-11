@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+//import { ref } from 'vue'
 import '@fullcalendar/core'
 import Fullcalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -13,10 +13,10 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list'
 import interactionPlugin from '@fullcalendar/interaction'
 import esLocale from "@fullcalendar/core/locales/es";
-import useEvents from '../composables/useEvents.js';
-const id = ref(15);
+//import useEvents from '../composables/useEvents.js';
+//const id = ref(15);
 
-const {createEvent,updateEvent,deleteEvent}= useEvents();
+//const {createEvent,updateEvent,deleteEvent}= useEvents();
 export default {
     name:'calendario-dos',
     components: {
@@ -37,12 +37,8 @@ export default {
                 editable: true,
                 selectable: true,
                 weekends: true,
-                dateClick: (arg) => {
-
-                    console.log("dateClick")
-                    console.log(arg)
-                },
-                select: (arg) => {
+                dateClick: this.handleDateclick,
+                /* select: (arg) => {
                     id.value = id.value + 1;
                     const cal = arg.view.calendar;
                     cal.unselect();
@@ -84,10 +80,16 @@ export default {
                 },
                 eventRemove: (arg) => {
                     deleteEvent(arg.event.id)
-                }
+                } */
 
 
             }
+        }
+    },
+    methods:{
+        handleDateclick(clickInfo){
+            this.$emit('dateClick',clickInfo)
+
         }
     },
     watch:{
