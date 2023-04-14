@@ -10,7 +10,7 @@
         role="dialog" aria-modal="true" aria-labelledby="modal-headline"> -->
       <form class="form_formContainer__au2IZ">
         <div class="base-module_titleContainer__HPPtA">
-          <h1 class="typography_h3__AkmD7" style="color: rgb(14, 16, 26);">Reservar una cita</h1>
+          <h1 class="typography_h3__AkmD7" style="color: rgb(14, 16, 26);">Agendar una cita</h1>
         </div>
 
 
@@ -19,15 +19,8 @@
             <div class="mb-4">
               <p class="form-field  Form_saleshelp pd-select required required-custom    form-field-primary">
                 <label class="field-label" for="894581_5546pi_894581_5546">Buscar Usuario: *</label>
-                <select name="894581_5546pi_894581_5546" id="894581_5546pi_894581_5546" class="select touched" onchange=""
-                  required="">
-                  <option value="" selected="selected"></option>
-                  <option value="92454">Myself</option>
-                  <option value="92456">My corporate team</option>
-                  <option value="92458">My company</option>
-                  <option value="92460">A governmental organization</option>
-                  <option value="92462">A non-profit organization</option>
-                  <option value="92464">An educational institution</option>
+                <select name="894581_5546pi_894581_5546" id="894581_5546pi_894581_5546" class="select touched" onchange="" required="">
+                  <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
                 </select>
               </p>
 
@@ -58,18 +51,18 @@
                 </div> -->
               <p class="form-field add-text-before email pd-text required required-custom    ">
                 <label class="field-label" for="id_agenda">Motivo:</label>
-                <input type="text" name="id_agenda" id="id_agenda" value="" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
+                <input v-model="form.title" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
               </p>
 
               <div class="rf-input--large gutter-top rf-input">
                 <div class="rf-input__inner">
                   <div class="rf-input__wrapper arrival-input">
                     <label class="field-label" for="id_agenda">Desde:</label>
-                    <vue-timepicker v-model="date"></vue-timepicker>
+                    <vue-timepicker v-on:touchend="closeModal" hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="horaIni" v-on:change="changeIniHour"></vue-timepicker>
                   </div>
                   <div class="rf-input__wrapper return-date-input">
                     <label class="field-label" for="id_agenda">Hasta:</label>
-                    <vue-timepicker v-model="date"></vue-timepicker>
+                    <vue-timepicker hide-disabled-items :hour-range="[[8, 17]]" :minute-interval="10" v-model="horaFin" v-on:change="changeFinHour"></vue-timepicker>
                   </div>
                 </div>
               </div>
@@ -78,11 +71,11 @@
                 <div class="rf-input__inner">
                   <div class="rf-input__wrapper arrival-input">
                     <label class="field-label" for="id_agenda">Fecha:</label>
-                    <input type="text" name="id_agenda" value="" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+                    <input type="text" name="id_agenda" v-model="fFechaDeProgramacion" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
                   </div>
                   <div class="rf-input__wrapper return-date-input">
                     <label class="field-label" for="id_agenda">Duración:</label>
-                    <input type="text" name="id_agenda" value="" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+                    <input type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
                   </div>
                 </div>
               </div>
@@ -150,24 +143,45 @@
   
 <script>
 import VueTimepicker from 'vue3-timepicker';
+import moment from 'moment';
+
 export default {
   name: "modal-calendar",
   props: {
+    fechaProgramar:String,
+
     /* form:{
       type: Object,
       default: ()=>{}
     } */
   },
   data() {
+    
     return {
       form: {
-        title: " ",
+        title: "",
         date_at: " ",
         hour: " ",
         user_id: " ",
         session: 1800,
       },
       date: null,
+      fFechaDeProgramacion:this.fechaProgramar,
+      nombres: [
+        { id: 1, nombre: 'Juan' },
+        { id: 2, nombre: 'Maria' },
+        { id: 3, nombre: 'Pedro' }
+      ],
+      format: 'hh:mm',
+      horaIni:{
+        HH: '12',
+        mm: '00',
+      },
+      horaFin:{
+        HH: '12',
+        mm: '00',
+      },
+      indicadorTotalTime:""
     }
   },
   components: {
@@ -180,19 +194,42 @@ export default {
     store(form) {
       this.$emit('saveAppt', form)
     },
-    setTitle() {
-      return ''
+    changeIniHour: function() {
+      this.setTimeView();
     },
-    /* form(){
-      return {
-          title:" ",
-          date_at:" ",
-          hour:" ",
-          user_id:" ",
-          session:1800,
+    changeFinHour(){
+      this.setTimeView();
+    },
+    setTimeView(){
+      var consultaTime = this.diferencia;
+      this.indicadorTotalTime=consultaTime.estado?`${consultaTime.horas} h y ${consultaTime.minutos} min`:'Error';
+    },
+    
+  },
+  computed: {
+    diferencia() {
+      const inicio = moment(`2023-04-14 ${this.horaIni.HH}:${this.horaIni.mm}:00`, 'YYYY-MM-DD HH:mm:ss');
+      const fin = moment(`2023-04-14 ${this.horaFin.HH}:${this.horaFin.mm}:00`, 'YYYY-MM-DD HH:mm:ss');
+      const diff = moment.duration(fin.diff(inicio));
+      if(diff.hours()>=0){
+        if(diff.minutes()>=0){
+          return {
+            estado:true,
+            horas:diff.hours(),
+            minutos:diff.minutes()
+          }
+        }else{
+          return {
+            estado:false
+          }
+        }
+      }else{
+        return {
+            estado:false
+          }
       }
-    } */
-  }
+    }
+  },
 };
 </script>
   
@@ -202,14 +239,25 @@ export default {
 /* Or, with node_module alias path like: */
 @import '~vue3-timepicker/dist/VueTimepicker.css';
 
-.with_border_container__04AEG {
+/* .with_border_container__04AEG {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 12px 48px rgba(26, 33, 52, .11);
   max-width: 460px;
-  min-width: 320px;
+  min-width: 20%;
   padding: 32px;
   width: 100%;
+} */
+.with_border_container__04AEG {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 12px 48px rgba(26, 33, 52, .11);
+  align-items: center;
+  align-content: center;
+  max-width: 460px;
+  padding: 32px;
+  width: 50%;
+  margin: auto;
 }
 
 .form_formContainer__au2IZ {
