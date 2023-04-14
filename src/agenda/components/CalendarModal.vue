@@ -58,26 +58,36 @@
                 </div> -->
               <p class="form-field add-text-before email pd-text required required-custom    ">
                 <label class="field-label" for="id_agenda">Motivo:</label>
-                <input type="text" name="id_agenda" id="id_agenda" value="" class="text touched" size="30" maxlength="255"
-                  onchange="" onfocus="" required="">
+                <input type="text" name="id_agenda" id="id_agenda" value="" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
               </p>
 
-              <div class="uitk-field has-floatedLabel-label has-icon has-placeholder">
-                <label for="d1" class="uitk-field-label">
-                  <span aria-hidden="true">Departs as early as</span>
-                </label>
-                <input id="d1" name="d1" data-stid="input-date" type="text" class="uitk-field-input is-hidden"
-                  placeholder="Departs as early as" aria-required="false" aria-invalid="false" value="2023-04-20">
-                <button aria-label="Departs as early as April 20, 2023" data-name="d1" id="d1-btn"
-                  data-stid="open-date-picker" type="button" class="uitk-faux-input uitk-form-field-trigger">Apr
-                  20</button><button class="is-visually-hidden" type="button" aria-hidden="true"
-                  tabindex="-1"></button><svg class="uitk-icon uitk-field-icon uitk-icon-medium" aria-hidden="true"
-                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <path fill-rule="evenodd"
-                    d="M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-1.99 2L3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 5v11H5V8h14zm-7 2H7v5h5v-5z"
-                    clip-rule="evenodd"></path>
-                </svg>
+              <div class="rf-input--large gutter-top rf-input">
+                <div class="rf-input__inner">
+                  <div class="rf-input__wrapper arrival-input">
+                    <label class="field-label" for="id_agenda">Desde:</label>
+                    <vue-timepicker v-model="date"></vue-timepicker>
+                  </div>
+                  <div class="rf-input__wrapper return-date-input">
+                    <label class="field-label" for="id_agenda">Hasta:</label>
+                    <vue-timepicker v-model="date"></vue-timepicker>
+                  </div>
+                </div>
               </div>
+
+              <div class="rf-input--large gutter-top rf-input">
+                <div class="rf-input__inner">
+                  <div class="rf-input__wrapper arrival-input">
+                    <label class="field-label" for="id_agenda">Fecha:</label>
+                    <input type="text" name="id_agenda" value="" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+                  </div>
+                  <div class="rf-input__wrapper return-date-input">
+                    <label class="field-label" for="id_agenda">Duración:</label>
+                    <input type="text" name="id_agenda" value="" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+                  </div>
+                </div>
+              </div>
+
+
 
             </div>
 
@@ -89,20 +99,20 @@
                <div v-if="$page.errors.title" class="text-red-500">{{ $page.errors.title[0]}}</div> 
             </div> -->
 
-            <div class="mb-4">
+            <!-- <div class="mb-4">
               <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Fecha</label>
               <input v-model="form.date_at" disabled="true" type="text"
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="exampleFormControlInput1" placeholder="Enter pass" />
             </div>
-            
+
             <div class="mb-4">
               <label for="exampleFormControlInput2" class="block text-gray-700 text-sm font-bold mb-2">Hora</label>
               <input v-model="form.hour" disabled="true" type="time"
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="exampleFormControlInput2" />
             </div>
-            <!-- start select -->
+
             <div class="col-span-6 sm:col-span-3">
               <label for="timeSesion" class="block text-sm font-medium leading-5 text-gray-700">Duración</label>
               <select v-model="form.session" id="timeSesion"
@@ -111,18 +121,27 @@
                 <option value="1800">30 minutos</option>
                 <option value="3600">1 hora</option>
               </select>
-            </div>
-            <!-- end select -->
+            </div> -->
+
           </div>
         </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button @click.prevent="store(form)" type="button"
-            class="inline-flex justify-center w-full border border-teal-500 bg-teal-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-teal-600 focus:outline-none focus:shadow-outline">Guardar</button>
-          <button type="button"
-            class="inline-flex justify-center w-full border border-red-500 text-red-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:text-white hover:bg-red-600 focus:outline-none focus:shadow-outline">Eliminar</button>
-          <button @click.prevent="closeModal" type="button"
-            class="inline-flex justify-center w-full border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">atrás</button>
-        </div>
+        <!-- <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"> -->
+          <!-- <button type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Continue</span></button> -->
+
+          <!-- <button @click.prevent="store(form)" type="button" >Guardar</button>
+          <button type="button">Eliminar</button>
+          <button @click.prevent="closeModal" type="button">atrás</button> -->
+          <div class="rf-input--large gutter-top rf-input">
+                <div class="rf-input__inner">
+                  <div class="rf-input__wrapper arrival-input">
+                    <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Programar</span></button>
+                  </div>
+                  <div class="rf-input__wrapper return-date-input">
+                    <button @click.prevent="closeModal" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
+                  </div>
+                </div>
+              </div>
+        <!-- </div> -->
       </form>
       <!-- </div> -->
     </div>
@@ -130,7 +149,7 @@
 </template>
   
 <script>
-
+import VueTimepicker from 'vue3-timepicker';
 export default {
   name: "modal-calendar",
   props: {
@@ -147,10 +166,12 @@ export default {
         hour: " ",
         user_id: " ",
         session: 1800,
-      }
+      },
+      date: null,
     }
   },
-  components: {     
+  components: {
+    VueTimepicker
   },
   methods: {
     closeModal() {
@@ -176,6 +197,11 @@ export default {
 </script>
   
 <style scoped>
+@import 'vue3-timepicker/dist/VueTimepicker.css';
+
+/* Or, with node_module alias path like: */
+@import '~vue3-timepicker/dist/VueTimepicker.css';
+
 .with_border_container__04AEG {
   background-color: #fff;
   border-radius: 8px;
@@ -358,6 +384,70 @@ p.form-field label,
 
 
 
+.rf-input--large {
+    display: block;
+    width: 100%;
+}
+.gutter-top {
+    margin-top: 20px;
+}
+.rf-input {
+    display: inline-block;
+    vertical-align: bottom;
+}
+.rf-input__inner {
+    box-shadow: 0 4px 15px transparent;
+    display: flex;
+    transition: box-shadow .2s ease-in-out;
+    border-radius: 3px;
+}
+.flight-search__panel__fieldset--date .rf-input__wrapper {
+    flex: 0 0 50%;
+    max-width: 50%;
+    min-width: 0;
+}
+.flight-search__panel__fieldset--date .rf-input__wrapper {
+    -webkit-box-flex: 0;
+    flex: 0 0 50%;
+    max-width: 50%;
+    min-width: 0;
+}
+.rf-input__wrapper {
+    display: block;
+    flex: 1 0 100px;
+    max-width: 100%;
+    position: relative;
+    vertical-align: middle;
+}
+
+.base_basic__8rArQ {
+    align-items: center;
+    border-radius: 6px;
+    display: flex;
+    height: 48px;
+    justify-content: center;
+    padding:0;
+    position: relative;
+    margin: none;
+    width: 90%;
+
+}
+
+.base_text__vPnqO {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 32px;
+}
+.btn_color_verde {
+    background: #0d8065;
+    color: #fff;
+}
+
+.btn_color_rojo {
+    background: #dc3545;
+    color: #fff;
+}
+
 .top-100 {
   top: 100%;
 }
@@ -368,5 +458,4 @@ p.form-field label,
 
 .max-h-select {
   max-height: 300px;
-}
-</style>
+}</style>
