@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+
 const routes = [{
         path: '/',
         name: 'home',
@@ -19,18 +20,16 @@ const routes = [{
             import ( /* webpackChunkName: "about" */ '@/components/EventCalendar.vue')
     },
     {
-        path: '/calendar',
-        name: 'Calendar',
-        component: () =>
-            import ( /* webpackChunkName: "about" */ '@/components/Calendar.vue')
-    },
-    {
         path: '/agenda/books/list',
         name: 'book-list',
         component: () =>
             import ( /* webpackChunkName: "about" */ '@/agenda/Books.vue')
     }
 ]
+
+/* router.beforeEach((to,from,next)=>{
+    if(to.path ==="/login" && auth.currentUser)
+}) */
 
 const router = createRouter({
     history: createWebHashHistory(),

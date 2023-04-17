@@ -1,24 +1,35 @@
 <template>
     <div>
+        <button @click.prevent="autenticar" type="submit" ><span class="base_text__vPnqO">Cancelar</span></button>
+
         <h3>Calendario</h3>
         <div class="pageWhiteBackground">
             <div class="component-a">
                 <Calendar @dateClick="dateClick"></Calendar>
             </div>
             <div class="_2H35C-container">
-                <modal-calendar v-if="showModal" :forma="newEvent" @closeModal="closeModal" :fechaProgramar="fechaProgramar"></modal-calendar>    
-                
+                <modal-calendar v-if="showModal" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></modal-calendar>    
             </div>
-            
         </div>
 
     </div>
 </template>
 
 <script>
-import Calendar from '@/components/Calendar.vue'
+import Calendar from './components/Calendar.vue'
 import ModalCalendar from './components/CalendarModal.vue'
+import { Formatos } from '@/utils/Formatos.js';
+import { auth,firestore} from "../firebase"
 
+
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import {useUserStore} from '@/stores/user.js'
+
+import { collection, addDoc } from 'firebase/firestore';
+//import { ref } from 'vue';
+//const data = ref({ id: 1, sexo: 'Masculino' });
+
+const counterStore = useUserStore();
 export default {
     name: 'book-list',
     components: {
@@ -43,18 +54,52 @@ export default {
             this.$data.showModal = true;
             console.log('Recibiendo datos: ', arg);
             const {date} = arg;
-            console.log(this.recortarFecha(date));
-            this.fechaProgramar=this.recortarFecha(date);
+
+            this.fechaProgramar=Formatos.soloFechaDMY(date);
+        },
+        async registrarUser() {
+            
+            var respuesta = await createUserWithEmailAndPassword(auth,'kevsssinmohu@gmail.com',"1234567");
+            console.log("consultando xD",respuesta)
+
+        },
+        async autenticar() {
+            
+            var respuesta = await counterStore.login('kevinmohu@gmail.com',"1234567");
+            console.log("respuesta",respuesta)
+            console.log(counterStore.user)
+            console.log("firestore",firestore);
+            /* const usuario = {
+                id:1,
+                value:"Masculino"
+            }; 
+            await firestore.collection('sexo')
+            .add(usuario); */
+            try {
+                const docRef = await addDoc(collection(firestore, 'sexo'), { id: 0, sexo: 'Femenino' });
+                console.log('Document written with ID: ', docRef.id);
+            } catch (e) {
+                console.error('Error adding document: ', e);
+            }
+
         },
         closeModal() {
             this.$data.showModal = false;
         },
-        recortarFecha(fecha ){
+        recortarFecha(fecha){
             const fechaOriginal = new Date(fecha);
             const dia = fechaOriginal.getDate();
             const mes = fechaOriginal.getMonth() + 1;
             const anio = fechaOriginal.getFullYear();
             return `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
+        },
+        saveAppt(param){
+            console.log("param")
+            console.log({param})
+            /* if(param.link===''){
+                alert("Complete el campo Link")
+            } */
+            this.$data.showModal = false;
         }
     },
 }

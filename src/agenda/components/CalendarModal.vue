@@ -1,13 +1,8 @@
 <template>
   <div class="with_border_container__04AEG">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-      <!-- <div class="fixed inset-0 transition-opacity">
-        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-      </div>
-      <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span> -->
-      <!-- <div
-        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-        role="dialog" aria-modal="true" aria-labelledby="modal-headline"> -->
+
+
       <form class="form_formContainer__au2IZ">
         <div class="base-module_titleContainer__HPPtA">
           <h1 class="typography_h3__AkmD7" style="color: rgb(14, 16, 26);">Agendar una cita</h1>
@@ -17,52 +12,30 @@
         <div class="signin_textFieldsContainer__WIXUm">
           <div class>
             <div class="mb-4">
+              
               <p class="form-field  Form_saleshelp pd-select required required-custom    form-field-primary">
-                <label class="field-label" for="894581_5546pi_894581_5546">Buscar Usuario: *</label>
-                <select name="894581_5546pi_894581_5546" id="894581_5546pi_894581_5546" class="select touched" onchange="" required="">
+                <label class="field-label" for="idSelector">Buscar Usuario: *</label>
+                <select name="idSelector" id="idSelector" class="select touched" v-model="form.paciente" onchange="" required="">
                   <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
                 </select>
               </p>
 
-              <!-- <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Buscar
-                  Usuario</label>
-                <div class="flex flex-col relative">
-                  <div class="w-full">
-                    <div class="my-2 p-1 bg-white flex border border-gray-200 rounded">
-                      <div class="flex flex-auto flex-wrap"></div>
-                      <input placeholder="Buscar Usuario"
-                        class="p-1 px-2 appearance-none outline-none w-full text-gray-800" />
-                      <div class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200">
-                        <button type="button" class="cursor-pointer w-6 h-6 text-red-600 outline-none focus:outline-none">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-chevron-up w-4 h-4">
-                            <polyline points="18 15 12 9 6 15" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="absolute shadow bg-white top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto svelte-5uyqqj">
- 
-                  </div>
-
-                </div> -->
+              
               <p class="form-field add-text-before email pd-text required required-custom    ">
-                <label class="field-label" for="id_agenda">Motivo:</label>
-                <input v-model="form.title" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
+                <label class="field-label" for="id_agenda">Link:</label>
+                <input v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
               </p>
 
+              
               <div class="rf-input--large gutter-top rf-input">
                 <div class="rf-input__inner">
                   <div class="rf-input__wrapper arrival-input">
                     <label class="field-label" for="id_agenda">Desde:</label>
-                    <vue-timepicker v-on:touchend="closeModal" hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="horaIni" v-on:change="changeIniHour"></vue-timepicker>
+                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
                   </div>
                   <div class="rf-input__wrapper return-date-input">
                     <label class="field-label" for="id_agenda">Hasta:</label>
-                    <vue-timepicker hide-disabled-items :hour-range="[[8, 17]]" :minute-interval="10" v-model="horaFin" v-on:change="changeFinHour"></vue-timepicker>
+                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 17]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
                   </div>
                 </div>
               </div>
@@ -81,40 +54,8 @@
               </div>
 
 
-
             </div>
 
-            <!-- <div class="mb-4">
-              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Motivo:</label>
-              <input v-model="form.title" type="text"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="exampleFormControlInput1" placeholder="Ingresa el motivo de la consulta" autocomplete="off" />
-               <div v-if="$page.errors.title" class="text-red-500">{{ $page.errors.title[0]}}</div> 
-            </div> -->
-
-            <!-- <div class="mb-4">
-              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Fecha</label>
-              <input v-model="form.date_at" disabled="true" type="text"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="exampleFormControlInput1" placeholder="Enter pass" />
-            </div>
-
-            <div class="mb-4">
-              <label for="exampleFormControlInput2" class="block text-gray-700 text-sm font-bold mb-2">Hora</label>
-              <input v-model="form.hour" disabled="true" type="time"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="exampleFormControlInput2" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-3">
-              <label for="timeSesion" class="block text-sm font-medium leading-5 text-gray-700">Duración</label>
-              <select v-model="form.session" id="timeSesion"
-                class="mt-1 block form-select w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                <option value="900">15 minutos</option>
-                <option value="1800">30 minutos</option>
-                <option value="3600">1 hora</option>
-              </select>
-            </div> -->
 
           </div>
         </div>
@@ -125,18 +66,18 @@
           <button type="button">Eliminar</button>
           <button @click.prevent="closeModal" type="button">atrás</button> -->
           <div class="rf-input--large gutter-top rf-input">
-                <div class="rf-input__inner">
-                  <div class="rf-input__wrapper arrival-input">
-                    <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Programar</span></button>
-                  </div>
-                  <div class="rf-input__wrapper return-date-input">
-                    <button @click.prevent="closeModal" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
-                  </div>
-                </div>
+            <div class="rf-input__inner">
+              <div class="rf-input__wrapper arrival-input">
+                <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
               </div>
-        <!-- </div> -->
+              <div class="rf-input__wrapper return-date-input">
+                <button @click.prevent="closeModal" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
+              </div>
+            </div>
+          </div>
       </form>
-      <!-- </div> -->
+
+
     </div>
   </div>
 </template>
@@ -144,25 +85,27 @@
 <script>
 import VueTimepicker from 'vue3-timepicker';
 import moment from 'moment';
+import {useUserStore} from '@/stores/user.js'
 
+
+const counterStore = useUserStore();
 export default {
   name: "modal-calendar",
   props: {
     fechaProgramar:String,
 
-    /* form:{
-      type: Object,
-      default: ()=>{}
-    } */
   },
   data() {
     
     return {
       form: {
-        title: "",
-        date_at: " ",
-        hour: " ",
-        user_id: " ",
+        paciente: "",
+        link: "",
+        horaIni: {},
+        horaFin: {},
+        fechaIni:'',
+        fechaFin:'',
+        user_id: counterStore.user,
         session: 1800,
       },
       date: null,
@@ -173,14 +116,6 @@ export default {
         { id: 3, nombre: 'Pedro' }
       ],
       format: 'hh:mm',
-      horaIni:{
-        HH: '12',
-        mm: '00',
-      },
-      horaFin:{
-        HH: '12',
-        mm: '00',
-      },
       indicadorTotalTime:""
     }
   },
@@ -201,34 +136,43 @@ export default {
       this.setTimeView();
     },
     setTimeView(){
+      this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.form.horaIni);
+      this.form.fechaFin = this.horaFecha(this.fFechaDeProgramacion,this.form.horaFin);
       var consultaTime = this.diferencia;
-      this.indicadorTotalTime=consultaTime.estado?`${consultaTime.horas} h y ${consultaTime.minutos} min`:'Error';
+      this.indicadorTotalTime=(consultaTime.estado)
+        ?this.minToText(consultaTime.minutos)
+        :(this.form.horaIni==undefined || this.form.horaIni==undefined)
+            ?'':'Error';
     },
+    minToText(minutos){
+      var hor = minutos>=60?Math.floor(minutos/60):0;
+      var min = (minutos-hor*60);
+      return `${hor} h y ${min} min`
+    },
+    horaFecha(fecha, hora){
+      return `${fecha} ${hora.HH}:${hora.mm}:00`;
+    }
     
   },
   computed: {
     diferencia() {
-      const inicio = moment(`2023-04-14 ${this.horaIni.HH}:${this.horaIni.mm}:00`, 'YYYY-MM-DD HH:mm:ss');
-      const fin = moment(`2023-04-14 ${this.horaFin.HH}:${this.horaFin.mm}:00`, 'YYYY-MM-DD HH:mm:ss');
+      const inicio = moment(this.form.fechaIni, 'YYYY-MM-DD HH:mm:ss');
+      const fin = moment(this.form.fechaFin, 'YYYY-MM-DD HH:mm:ss');
       const diff = moment.duration(fin.diff(inicio));
-      if(diff.hours()>=0){
-        if(diff.minutes()>=0){
-          return {
-            estado:true,
-            horas:diff.hours(),
-            minutos:diff.minutes()
-          }
-        }else{
-          return {
-            estado:false
-          }
-        }
+      var minutos = diff._milliseconds/60000;
+      if(minutos>=0  ){
+        return {
+          estado: true,
+          minutos: diff._milliseconds/60000
+        };
       }else{
         return {
-            estado:false
-          }
+          estado: false,
+          minutos:0
+        }
       }
-    }
+    },
+    
   },
 };
 </script>
