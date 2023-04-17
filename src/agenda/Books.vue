@@ -19,15 +19,13 @@
 import Calendar from './components/Calendar.vue'
 import ModalCalendar from './components/CalendarModal.vue'
 import { Formatos } from '@/utils/Formatos.js';
-import { auth,firestore} from "../firebase"
+import { auth} from "../firebase"
 
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import {useUserStore} from '@/stores/user.js'
 
-import { collection, addDoc } from 'firebase/firestore';
-//import { ref } from 'vue';
-//const data = ref({ id: 1, sexo: 'Masculino' });
+
 
 const counterStore = useUserStore();
 export default {
@@ -36,6 +34,7 @@ export default {
         Calendar,
         ModalCalendar
     },
+
     data() {
         return {
             showModal: false,
@@ -68,20 +67,13 @@ export default {
             var respuesta = await counterStore.login('kevinmohu@gmail.com',"1234567");
             console.log("respuesta",respuesta)
             console.log(counterStore.user)
-            console.log("firestore",firestore);
-            /* const usuario = {
-                id:1,
-                value:"Masculino"
-            }; 
-            await firestore.collection('sexo')
-            .add(usuario); */
-            try {
-                const docRef = await addDoc(collection(firestore, 'sexo'), { id: 0, sexo: 'Femenino' });
-                console.log('Document written with ID: ', docRef.id);
-            } catch (e) {
-                console.error('Error adding document: ', e);
-            }
-
+            //console.log(await counterStore.insert('sexo',{ label: "0", value: 'Femenino' }));
+            //console.log(await counterStore.insert('sexo',{ label: "1", value: 'Masculino' }));
+            //console.log(await counterStore.getColletionById('sexo',0));
+            //console.log(await counterStore.getColletion('sexo'));
+            //console.log(await counterStore.update('sexo',"aFPROV8y3KHsnBsxN4x6",{ id: '1', valor: "Masculino" }));
+            //console.log(await counterStore.deleteCollection('sexo'));
+            //console.log(await counterStore.deleteDocument('sexo',"OKPvmXuEB0hPNeyoudR0"));
         },
         closeModal() {
             this.$data.showModal = false;

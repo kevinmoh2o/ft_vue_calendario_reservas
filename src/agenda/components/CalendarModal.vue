@@ -95,6 +95,9 @@ export default {
     fechaProgramar:String,
 
   },
+  mounted: async function() {
+
+  },
   data() {
     
     return {
