@@ -31,7 +31,7 @@ export default {
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'timeGridWeek,dayGridMonth,dayGridWeek,listDay',
+                    right: 'timeGridWeek,dayGridMonth,listDay',
                 },
                 allDaySlot:false,
                 editable: true,

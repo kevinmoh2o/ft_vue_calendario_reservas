@@ -1,16 +1,16 @@
 <template>
     <div>
-        <button @click.prevent="autenticar" type="submit" ><span class="base_text__vPnqO">Cancelar</span></button>
+        <!-- <button @click.prevent="autenticar" type="submit" ><span class="base_text__vPnqO">Cancelar</span></button> -->
 
-        <h3>Calendario</h3>
-        <div class="pageWhiteBackground">
-            <div class="component-a">
+        <!-- <h3>Calendario</h3> -->
+        <!-- <div class="py-12"> -->
+            <div class="_2H35C-container">
                 <Calendar @dateClick="dateClick"></Calendar>
             </div>
             <div class="_2H35C-container">
                 <modal-calendar v-if="showModal" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></modal-calendar>    
             </div>
-        </div>
+        <!-- </div> -->
 
     </div>
 </template>
@@ -104,7 +104,7 @@ export default {
 }
 .component-a {
   position: absolute;
-  top: 100;
+  top: 200;
   left: 0;
   width: 100%;
   height: 100%;

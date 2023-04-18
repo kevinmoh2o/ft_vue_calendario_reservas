@@ -35,7 +35,7 @@
                   </div>
                   <div class="rf-input__wrapper return-date-input">
                     <label class="field-label" for="id_agenda">Hasta:</label>
-                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 17]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
+                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
                   </div>
                 </div>
               </div>
@@ -86,6 +86,7 @@
 import VueTimepicker from 'vue3-timepicker';
 import moment from 'moment';
 import {useUserStore} from '@/stores/user.js'
+import { Formatos } from '@/utils/Formatos.js';
 
 
 const counterStore = useUserStore();
@@ -108,8 +109,7 @@ export default {
         horaFin: {},
         fechaIni:'',
         fechaFin:'',
-        user_id: counterStore.user,
-        session: 1800,
+        userid: counterStore.user
       },
       date: null,
       fFechaDeProgramacion:this.fechaProgramar,
@@ -129,8 +129,19 @@ export default {
     closeModal() {
       this.$emit('closeModal')
     },
-    store(form) {
-      this.$emit('saveAppt', form)
+    async store(form) {
+      this.$emit('saveAppt', form);
+      var fi = Formatos.fechaStrinToObject(form.fechaIni);
+      var ff = Formatos.fechaStrinToObject(form.fechaFin);
+      var objeto = {
+        paciente:form.paciente,
+        link:form.link,
+        fechaIni:fi,
+        fechaFin:ff,
+        userid:form.userid
+      }
+      console.log(objeto)
+      await counterStore.insert('agenda',objeto);
     },
     changeIniHour: function() {
       this.setTimeView();
@@ -205,6 +216,7 @@ export default {
   padding: 32px;
   width: 50%;
   margin: auto;
+  min-width: 400px;
 }
 
 .form_formContainer__au2IZ {

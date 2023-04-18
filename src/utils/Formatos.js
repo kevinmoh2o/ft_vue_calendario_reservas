@@ -12,8 +12,10 @@ export const Formatos = {
     },
 
     // Formato para números con separador de miles
-    separadorMiles: function(valor) {
-      return valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    fechaStrinToObject: function(fecha) {
+      console.log(fecha)
+      const fechaParts = fecha.split(' ');
+      return fechaParts[0].split('/').reverse().join('-') + 'T' + fechaParts[1] + 'Z';
     },
     
     // Formato para números como moneda
