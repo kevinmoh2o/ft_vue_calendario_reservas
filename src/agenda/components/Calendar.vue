@@ -17,11 +17,39 @@ import esLocale from "@fullcalendar/core/locales/es";
 //const id = ref(15);
 
 //const {createEvent,updateEvent,deleteEvent}= useEvents();
+import {useUserStore} from '@/stores/user.js'
+import { onMounted } from 'vue'
+
+
+
+const counterStore = useUserStore();
 export default {
-    name:'calendario-dos',
+    name: 'calendario-dos',
     components: {
         Fullcalendar
     },
+    setup() {
+        const variablecitaCalendario = []
+
+        onMounted(fetchEvents)
+
+        async function fetchEvents() {
+            // Llamar a la API y obtener los datos
+            const eventsData = await counterStore.getColletion('agenda')
+            console.log(eventsData)
+
+            variablecitaCalendario.events = eventsData.map(event => ({
+            title: event.paciente,
+            start: event.fechaIni,
+            end: event.fechaFin
+            }))
+        }
+
+        
+           return variablecitaCalendario
+        
+        },
+
     data() {
         return {
             calendarOptions: {
@@ -33,11 +61,12 @@ export default {
                     center: 'title',
                     right: 'timeGridWeek,dayGridMonth,listDay',
                 },
-                allDaySlot:false,
+                allDaySlot: false,
                 editable: true,
                 selectable: true,
                 weekends: true,
                 dateClick: this.handleDateclick,
+                events: []
                 /* select: (arg) => {
                     id.value = id.value + 1;
                     const cal = arg.view.calendar;
@@ -83,16 +112,27 @@ export default {
                 } */
 
 
-            }
-        }
-    },
-    methods:{
-        handleDateclick(clickInfo){
-            this.$emit('dateClick',clickInfo)
+            },
+            eventsData: []
 
         }
     },
-    watch:{
+    methods: {
+        handleDateclick(clickInfo) {
+            this.$emit('dateClick', clickInfo)
+        },
+        async fetchEvents() {
+            // Llamar a la API y obtener los datos
+        this.eventsData  =await counterStore.getColletionById('sexo',0);
+        this.calendarOptions.events = this.eventsData.map(event => ({
+            title: event.paciente,
+            start: event.fechaIni,
+            end: event.fechaFin
+        }));
+
+    },
+    },
+    watch: {
 
     }
 

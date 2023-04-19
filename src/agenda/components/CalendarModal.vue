@@ -4,6 +4,8 @@
 
 
       <form class="form_formContainer__au2IZ">
+
+
         <div class="base-module_titleContainer__HPPtA">
           <h1 class="typography_h3__AkmD7" style="color: rgb(14, 16, 26);">Agendar una cita</h1>
         </div>
@@ -59,22 +61,19 @@
 
           </div>
         </div>
-        <!-- <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"> -->
-          <!-- <button type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Continue</span></button> -->
 
-          <!-- <button @click.prevent="store(form)" type="button" >Guardar</button>
-          <button type="button">Eliminar</button>
-          <button @click.prevent="closeModal" type="button">atrás</button> -->
+
           <div class="rf-input--large gutter-top rf-input">
             <div class="rf-input__inner">
               <div class="rf-input__wrapper arrival-input">
                 <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
               </div>
               <div class="rf-input__wrapper return-date-input">
-                <button @click.prevent="closeModal" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
+                <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
               </div>
             </div>
           </div>
+
       </form>
 
 
@@ -86,7 +85,7 @@
 import VueTimepicker from 'vue3-timepicker';
 import moment from 'moment';
 import {useUserStore} from '@/stores/user.js'
-import { Formatos } from '@/utils/Formatos.js';
+//import { Formatos } from '@/utils/Formatos.js';
 
 
 const counterStore = useUserStore();
@@ -126,18 +125,15 @@ export default {
     VueTimepicker
   },
   methods: {
-    closeModal() {
-      this.$emit('closeModal')
-    },
     async store(form) {
       this.$emit('saveAppt', form);
-      var fi = Formatos.fechaStrinToObject(form.fechaIni);
-      var ff = Formatos.fechaStrinToObject(form.fechaFin);
+      //var fi = Formatos.fechaStrinToObject(form.fechaIni);
+      //var ff = Formatos.fechaStrinToObject(form.fechaFin);
       var objeto = {
         paciente:form.paciente,
         link:form.link,
-        fechaIni:fi,
-        fechaFin:ff,
+        fechaIni:form.fechaIni,
+        fechaFin:form.fechaFin,
         userid:form.userid
       }
       console.log(objeto)

@@ -26,7 +26,6 @@ const options = reactive({
     selectable:true,
     weekends:true,
     dateClick:(arg)=>{
-        
         console.log("dateClick")
         console.log(arg)
     },
