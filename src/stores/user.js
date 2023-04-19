@@ -54,13 +54,14 @@ export const useUserStore = defineStore("user",{
             }
         },
         async getColletion(tabla){
-            const q = query(collection(firestore, tabla));
+            const q =await query(collection(firestore, tabla));
             try {
                 const results = [];
                 onSnapshot(q, (element) => {
                     element.forEach((doc) => {
                         results.push({ id: doc.id, ...doc.data() });
                     });
+                    //this.user=results
                 });
                 return results;
               } catch (e) {
@@ -74,6 +75,7 @@ export const useUserStore = defineStore("user",{
                 onSnapshot(q, (element) => {
                     element.forEach((doc) => {
                         results.push({ id: doc.id, ...doc.data() });
+                        
                     });
                 });
                 return results;

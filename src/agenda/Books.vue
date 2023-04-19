@@ -5,7 +5,10 @@
         <!-- <h3>Calendario</h3> -->
         <!-- <div class="py-12"> -->
             <div class="_2H35C-container">
-                <Calendar @dateClick="dateClick"></Calendar>
+                
+                <Suspense>
+                    <Calendar @dateClick="dateClick"></Calendar>
+                </Suspense>
             </div>
             <div class="_2H35C-container">
                 <modal-calendar v-if="showModal" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></modal-calendar>    

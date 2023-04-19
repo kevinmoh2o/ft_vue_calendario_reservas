@@ -15,7 +15,7 @@ export const Formatos = {
     fechaStrinToObject: function(fecha) {
       console.log(fecha)
       const fechaParts = fecha.split(' ');
-      return fechaParts[0].split('/').reverse().join('-') + 'T' + fechaParts[1] + 'Z';
+      return fechaParts[0].split('/').reverse().join('-') + 'T' + fechaParts[1];
     },
     
     // Formato para números como moneda

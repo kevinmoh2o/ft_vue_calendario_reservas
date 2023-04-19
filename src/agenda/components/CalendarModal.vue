@@ -17,7 +17,7 @@
               
               <p class="form-field  Form_saleshelp pd-select required required-custom    form-field-primary">
                 <label class="field-label" for="idSelector">Buscar Usuario: *</label>
-                <select name="idSelector" id="idSelector" class="select touched" v-model="form.paciente" onchange="" required="">
+                <select name="idSelector" id="idSelector" class="select touched" v-model="form.title" onchange="" required="">
                   <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
                 </select>
               </p>
@@ -85,7 +85,7 @@
 import VueTimepicker from 'vue3-timepicker';
 import moment from 'moment';
 import {useUserStore} from '@/stores/user.js'
-//import { Formatos } from '@/utils/Formatos.js';
+import { Formatos } from '@/utils/Formatos.js';
 
 
 const counterStore = useUserStore();
@@ -102,7 +102,7 @@ export default {
     
     return {
       form: {
-        paciente: "",
+        title: "",
         link: "",
         horaIni: {},
         horaFin: {},
@@ -127,14 +127,16 @@ export default {
   methods: {
     async store(form) {
       this.$emit('saveAppt', form);
-      //var fi = Formatos.fechaStrinToObject(form.fechaIni);
-      //var ff = Formatos.fechaStrinToObject(form.fechaFin);
+      var fi = Formatos.fechaStrinToObject(form.fechaIni);
+      var ff = Formatos.fechaStrinToObject(form.fechaFin);
       var objeto = {
-        paciente:form.paciente,
+        title:form.title,
         link:form.link,
-        fechaIni:form.fechaIni,
-        fechaFin:form.fechaFin,
-        userid:form.userid
+        fechaIni:fi,
+        fechaFin:ff,
+        userid:form.userid,
+        backgroundColor: "red",
+        borderColor: "darkred",
       }
       console.log(objeto)
       await counterStore.insert('agenda',objeto);

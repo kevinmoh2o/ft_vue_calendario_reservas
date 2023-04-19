@@ -18,7 +18,6 @@ import esLocale from "@fullcalendar/core/locales/es";
 
 //const {createEvent,updateEvent,deleteEvent}= useEvents();
 import {useUserStore} from '@/stores/user.js'
-import { onMounted } from 'vue'
 
 
 
@@ -28,28 +27,15 @@ export default {
     components: {
         Fullcalendar
     },
-    setup() {
-        const variablecitaCalendario = []
-
-        onMounted(fetchEvents)
-
-        async function fetchEvents() {
-            // Llamar a la API y obtener los datos
-            const eventsData = await counterStore.getColletion('agenda')
-            console.log(eventsData)
-
-            variablecitaCalendario.events = eventsData.map(event => ({
-            title: event.paciente,
-            start: event.fechaIni,
-            end: event.fechaFin
-            }))
-        }
-
+    async setup() {
         
-           return variablecitaCalendario
+        const rr = await counterStore.getColletion('agenda');
+        console.log(rr)
+        console.log(rr[0])
+        console.log(counterStore.user)
+    
         
-        },
-
+    },
     data() {
         return {
             calendarOptions: {
@@ -65,53 +51,10 @@ export default {
                 editable: true,
                 selectable: true,
                 weekends: true,
+                slotMinTime: "08:00:00",
+
                 dateClick: this.handleDateclick,
-                events: []
-                /* select: (arg) => {
-                    id.value = id.value + 1;
-                    const cal = arg.view.calendar;
-                    cal.unselect();
-                    cal.addEvent({
-                        id: `${id.value}`,
-                        title: `New event ${id.value}`,
-                        start: arg.start,
-                        end: arg.end,
-                        allDay: true
-                    })
-                },
-                eventClick: (arg) => {
-                    console.log("eventClick")
-                    console.log(arg)
-                    if (arg.event) {
-                        arg.event.remove();
-                    }
-                },
-                events: [],
-                eventAdd: (arg) => {
-                    console.log("create")
-                    console.log(arg)
-                    createEvent({
-                        id: arg.event.id,
-                        title: arg.event.title,
-                        start: arg.event.start,
-                        end: arg.event.end,
-                        allDay: arg.event.allDay
-                    })
-                },
-                eventChange: (arg) => {
-                    updateEvent({
-                        id: arg.event.id,
-                        title: arg.event.title,
-                        start: arg.event.start,
-                        end: arg.event.end,
-                        allDay: arg.event.allDay
-                    }, arg.event.id)
-                },
-                eventRemove: (arg) => {
-                    deleteEvent(arg.event.id)
-                } */
-
-
+                events: counterStore.user
             },
             eventsData: []
 
@@ -121,16 +64,6 @@ export default {
         handleDateclick(clickInfo) {
             this.$emit('dateClick', clickInfo)
         },
-        async fetchEvents() {
-            // Llamar a la API y obtener los datos
-        this.eventsData  =await counterStore.getColletionById('sexo',0);
-        this.calendarOptions.events = this.eventsData.map(event => ({
-            title: event.paciente,
-            start: event.fechaIni,
-            end: event.fechaFin
-        }));
-
-    },
     },
     watch: {
 
