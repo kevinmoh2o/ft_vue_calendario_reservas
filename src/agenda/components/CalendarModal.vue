@@ -1,17 +1,64 @@
 <template>
-  <div class="with_border_container__04AEG">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+  <!-- <div class="cal-grcontainer"> -->
+    <!-- <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"> -->
 
 
-      <form class="form_formContainer__au2IZ">
+      <form class="cal-grcontainer">
 
 
-        <div class="base-module_titleContainer__HPPtA">
+        <div class="titulo">
           <h1 class="typography_h3__AkmD7" style="color: rgb(14, 16, 26);">Agendar una cita</h1>
         </div>
 
+        <div class="selecpatient">
+          <label class="field-label" for="idSelector">Paciente: *</label>
+          <select name="idSelector" id="idSelector" class="select touched" v-model="form.title" onchange="" required="">
+            <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
+          </select>
+        </div>
 
-        <div class="signin_textFieldsContainer__WIXUm">
+        <div class="fecha">
+          <label class="field-label" for="id_agenda">Fecha:</label>
+          <input type="text" name="id_agenda" v-model="fFechaDeProgramacion" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+        </div>
+        <div class="duracion">
+          <label class="field-label" for="id_agenda">Duración:</label>
+          <input type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+        </div>
+
+        <div class="horaini">
+          <label class="field-label" for="id_agenda">Desde:</label>
+          <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
+        </div>
+
+        <div class="horafin">
+          <label class="field-label" for="id_agenda">Hasta:</label>
+          <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
+        </div>
+
+        <div class="link">
+          <label class="field-label" for="id_agenda">Link:</label>
+          <input v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
+        </div>
+
+        <div class="nota">
+          <label class="field-label" >Nota:</label>
+          <textarea name="message" rows="2" cols="100%"></textarea>
+        </div>
+
+        <div class="boton1">
+          <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
+        </div>
+        <div class="boton2">
+          <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
+        </div>
+
+        
+        
+        
+
+
+        <!-- <div class="signin_textFieldsContainer__WIXUm">
           <div class>
             <div class="mb-4">
               
@@ -27,6 +74,12 @@
                 <label class="field-label" for="id_agenda">Link:</label>
                 <input v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
               </p>
+
+              <p>
+                <label class="field-label" >Nota:</label>
+                <textarea name="message" rows="3" cols="40"></textarea>
+              </p>
+              
 
               
               <div class="rf-input--large gutter-top rf-input">
@@ -60,10 +113,10 @@
 
 
           </div>
-        </div>
+        </div> -->
 
 
-          <div class="rf-input--large gutter-top rf-input">
+          <!-- <div class="rf-input--large gutter-top rf-input">
             <div class="rf-input__inner">
               <div class="rf-input__wrapper arrival-input">
                 <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
@@ -72,13 +125,13 @@
                 <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
               </div>
             </div>
-          </div>
+          </div> -->
 
       </form>
 
 
-    </div>
-  </div>
+    <!-- </div> -->
+ <!--  </div> -->
 </template>
   
 <script>
@@ -195,16 +248,23 @@ export default {
 /* Or, with node_module alias path like: */
 @import '~vue3-timepicker/dist/VueTimepicker.css';
 
-/* .with_border_container__04AEG {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 12px 48px rgba(26, 33, 52, .11);
-  max-width: 460px;
-  min-width: 20%;
-  padding: 32px;
-  width: 100%;
-} */
-.with_border_container__04AEG {
+.titulo{
+  grid-column: 1 / -1;
+}
+
+.selecpatient{
+  grid-column: 1 / -1;
+}
+
+.nota{
+  grid-column: 1 / -1;
+  margin: none;
+}
+
+.link{
+  grid-column: 1 / -1;
+}
+.cal-grcontainer {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 12px 48px rgba(26, 33, 52, .11);
@@ -215,6 +275,41 @@ export default {
   width: 50%;
   margin: auto;
   min-width: 400px;
+  display: grid;
+  /* gap: 10px; */
+    grid-template-areas: 
+        "titulo"
+        "selecpatient"
+        "fecha"
+        "duracion"
+        "horaini"
+        "horafin"
+        "link"
+        "nota"
+        "boton1"
+        "boton2"
+        ;
+}
+
+@media (min-width:400px){
+    .cal-grcontainer{
+        /* grid-template-columns: 200px auto;
+        grid-template-rows: 100px 50px auto 100px;
+        grid-template-areas: 
+        "header header"
+        "navbar navbar"
+        "sidebar main"
+        "footer footer"; */
+        grid-template:
+        "titulo titulo" 50px
+        "selecpatient selecpatient" 70px
+        "fecha duracion" 70px
+        "horaini horafin" 70px
+        "link link" 70px 
+        "nota nota" 100px
+        "boton1 boton2" 100px /
+        50% 50%;
+    }
 }
 
 .form_formContainer__au2IZ {

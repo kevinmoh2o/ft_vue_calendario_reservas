@@ -1,9 +1,6 @@
 <template>
     <div>
-        <!-- <button @click.prevent="autenticar" type="submit" ><span class="base_text__vPnqO">Cancelar</span></button> -->
 
-        <!-- <h3>Calendario</h3> -->
-        <!-- <div class="py-12"> -->
             <div class="_2H35C-container">
                 
                 <Suspense>
@@ -13,7 +10,6 @@
             <div class="_2H35C-container">
                 <modal-calendar v-if="showModal" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></modal-calendar>    
             </div>
-        <!-- </div> -->
 
     </div>
 </template>
