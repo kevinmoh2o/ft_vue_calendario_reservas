@@ -1,25 +1,28 @@
-/* import {useUserStore} from '@/stores/user.js'
-const counterStore = useUserStore();
+import {ref,onMounted} from 'vue';
+import { fetchEvents,storeEvent } from '@/apis/modelo';
 
 export default function useEvents(){
   const getEvents = ref([]);
 
 
-  const setEvents = async  () => {
-    getEvents.value = await fetchEvents();
+  /* const setEvents = async  (tabla) => {
+    console.log("esta llegando")
+    console.log(tabla)
+    getEvents.value = await fetchEvents(tabla);
+  } */
+
+  const setEvents = async (tabla) => {
+    console.log("esta llegando")
+    console.log(tabla)
+    await fetchEvents(tabla).then((result) => {
+      getEvents.value = result;
+    });
   }
 
   const createEvent = async  (event) => {
     storeEvent(event);
   }
 
-  const updateEvent = async  (event) => {
-    mutateEvent(event);
-  }
-
-  const deleteEvent = async  (event) => {
-    destroyEvent(event);
-  }
 
   onMounted(setEvents);
 
@@ -27,7 +30,6 @@ export default function useEvents(){
     getEvents,
     setEvents,
     createEvent,
-    updateEvent,
-    deleteEvent
+
   }
-} */
+}

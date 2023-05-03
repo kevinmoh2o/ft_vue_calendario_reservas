@@ -1,6 +1,19 @@
+import { collection, addDoc,query,onSnapshot } from "firebase/firestore";
+import { firestore } from "@/firebase";
 
-export const fetchEvents = async() => {
-    const q = await query(collection(firestore, tabla));
+export const storeEvent = async (tabla, registro) => {
+  try {
+    const docRef = await addDoc(collection(firestore, tabla), registro);
+    return { estado: true, valor: docRef };
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    return { estado: false, valor: "" };
+  }
+};
+
+export const fetchEvents = async (tabla) => {
+
+    const q = query(collection(firestore, tabla));
     try {
         const results = [];
         onSnapshot(q, (element) => {
@@ -10,35 +23,8 @@ export const fetchEvents = async() => {
             //this.user=results
         });
         return results;
-    } catch (e) {
-    console.error('Error getting documents: ', e);
-    }
-    //const response = await fetch(`${baseURL}/events`);
-    //return await response.json(); 
-}
+        } catch (e) {
+        console.error('Error getting documents: ', e);
+        }
+  };
 
-/* export const storeEvent = async(event) => {
-    return await fetch(`${baseURL}/events`,{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-        },
-        body: JSON.stringify(event)
-    }) 
-}
-
-export const mutateEvent = async(event,id) => {
-    return await fetch(`${baseURL}/events/${id}`,{
-        method:'PUT',
-        headers:{
-            'Content-Type':'application/json',
-        },
-        body: JSON.stringify(event)
-    }) 
-}
-
-export const destroyEvent = async(event,id) => {
-    return await fetch(`${baseURL}/events/${id}`,{
-        method:'PUT'
-    }) 
-}    */

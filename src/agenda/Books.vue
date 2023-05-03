@@ -15,6 +15,7 @@
 </template>
 
 <script>
+//import { onMounted } from 'vue';
 import Calendar from './components/Calendar.vue'
 import ModalCalendar from './components/CalendarModal.vue'
 import { Formatos } from '@/utils/Formatos.js';
@@ -22,18 +23,17 @@ import { auth} from "../firebase"
 
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import {useUserStore} from '@/stores/user.js'
+//import {useUserStore} from '@/stores/user.js'
+//import {getAll } from "@/apis/modelo.js";
 
 
-
-const counterStore = useUserStore();
-export default {
+//const counterStore = useUserStore();
+export default{
     name: 'book-list',
     components: {
         Calendar,
         ModalCalendar
     },
-
     data() {
         return {
             showModal: false,
@@ -48,6 +48,7 @@ export default {
         }
     },
     methods: {
+        
         dateClick(arg) {
             this.$data.showModal = true;
             console.log('Recibiendo datos: ', arg);
@@ -63,9 +64,11 @@ export default {
         },
         async autenticar() {
             
-            var respuesta = await counterStore.login('kevinmohu@gmail.com',"1234567");
-            console.log("respuesta",respuesta)
-            console.log(counterStore.user)
+            //var respuesta = await counterStore.login('kevinmohu@gmail.com',"1234567");
+            //console.log("respuesta",respuesta)
+            //console.log(counterStore.user)
+
+
             //console.log(await counterStore.insert('sexo',{ label: "0", value: 'Femenino' }));
             //console.log(await counterStore.insert('sexo',{ label: "1", value: 'Masculino' }));
             //console.log(await counterStore.getColletionById('sexo',0));
@@ -93,7 +96,12 @@ export default {
             this.$data.showModal = false;
         }
     },
-}
+};
+/* options.events=getEvents.value;
+watch(getEvents,()=>{
+    options.events=getEvents.value;
+})
+ */
 </script>
 
 <style scoped>
@@ -142,7 +150,7 @@ export default {
     display: -moz-box;
     display: -webkit-flex;
     display: -ms-flexbox;
-    display: box;
+    /* display: flex; */
     display: center;
     flex: 1;
     flex-direction: column;

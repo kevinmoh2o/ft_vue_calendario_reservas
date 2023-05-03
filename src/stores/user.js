@@ -1,3 +1,46 @@
+/* import { collection, getDocs, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { firestore } from "./firebaseConfig";
+
+// Obtener todos los documentos de una colección
+async function getAllDocuments(collectionName) {
+  const querySnapshot = await getDocs(collection(firestore, collectionName));
+  return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+}
+
+// Añadir un documento a una colección
+async function addDocument(collectionName, documentData) {
+  try {
+    const docRef = await addDoc(collection(firestore, collectionName), documentData);
+    return { estado: true, valor: docRef };
+  } catch (error) {
+    console.error("Error adding document: ", error);
+    return { estado: false, valor: "" };
+  }
+}
+
+// Actualizar un documento de una colección
+async function updateDocument(collectionName, documentId, documentData) {
+  try {
+    const docRef = await updateDoc(doc(firestore, collectionName, documentId), documentData);
+    return { estado: true, valor: docRef };
+  } catch (error) {
+    console.error("Error updating document: ", error);
+    return { estado: false, valor: "" };
+  }
+}
+
+// Borrar un documento de una colección
+async function deleteDocument(collectionName, documentId) {
+  try {
+    await deleteDoc(doc(firestore, collectionName, documentId));
+    return { estado: true, valor: "" };
+  } catch (error) {
+    console.error("Error deleting document: ", error);
+    return { estado: false, valor: "" };
+  }
+} */
+
+/*
 import { defineStore } from "pinia";
 import { auth,firestore } from "../firebase"
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
@@ -54,7 +97,7 @@ export const useUserStore = defineStore("user",{
             }
         },
         async getColletion(tabla){
-            const q =await query(collection(firestore, tabla));
+            const q = query(collection(firestore, tabla));
             try {
                 const results = [];
                 onSnapshot(q, (element) => {
@@ -111,24 +154,4 @@ export const useUserStore = defineStore("user",{
     }
 
 })
-
-/*
- import { ref } from 'vue';
-import { collection, getDocs } from 'firebase/firestore';
-import { firestore } from './firebase';
-
-const data = ref([]);
-
-const getData = async (tabla) => {
-  try {
-    const querySnapshot = await getDocs(collection(firestore, tabla));
-    const results = [];
-    querySnapshot.forEach((doc) => {
-      results.push({ id: doc.id, ...doc.data() });
-    });
-    data.value = results;
-  } catch (e) {
-    console.error('Error getting documents: ', e);
-  }
-};
  */

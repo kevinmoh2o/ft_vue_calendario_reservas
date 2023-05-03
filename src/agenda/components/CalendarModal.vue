@@ -5,7 +5,6 @@
 
       <form class="cal-grcontainer">
 
-
         <div class="titulo">
           <h1 class="typography_h3__AkmD7" style="color: rgb(14, 16, 26);">Agendar una cita</h1>
         </div>
@@ -16,6 +15,8 @@
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
         </div>
+
+        
 
         <div class="fecha">
           <label class="field-label" for="id_agenda">Fecha:</label>
@@ -43,7 +44,7 @@
 
         <div class="nota">
           <label class="field-label" >Nota:</label>
-          <textarea name="message" rows="2" cols="100%"></textarea>
+          <textarea name="message" rows="2"></textarea>
         </div>
 
         <div class="boton1">
@@ -137,11 +138,11 @@
 <script>
 import VueTimepicker from 'vue3-timepicker';
 import moment from 'moment';
-import {useUserStore} from '@/stores/user.js'
+//import {useUserStore} from '@/stores/user.js'
 import { Formatos } from '@/utils/Formatos.js';
 
 
-const counterStore = useUserStore();
+//const counterStore = useUserStore();
 export default {
   name: "modal-calendar",
   props: {
@@ -161,7 +162,7 @@ export default {
         horaFin: {},
         fechaIni:'',
         fechaFin:'',
-        userid: counterStore.user
+        userid: ""
       },
       date: null,
       fFechaDeProgramacion:this.fechaProgramar,
@@ -192,7 +193,7 @@ export default {
         borderColor: "darkred",
       }
       console.log(objeto)
-      await counterStore.insert('agenda',objeto);
+      //await counterStore.insert('agenda',objeto);
     },
     changeIniHour: function() {
       this.setTimeView();
@@ -252,10 +253,20 @@ export default {
   grid-column: 1 / -1;
 }
 
+textarea{
+  width: 100%;
+}
+
 .selecpatient{
   grid-column: 1 / -1;
 }
+.fecha{
+  padding: 4.8px;
+}
 
+.duracion{
+  padding: 4.8px;
+}
 .nota{
   grid-column: 1 / -1;
   margin: none;
