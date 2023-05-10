@@ -8,7 +8,7 @@
                 </Suspense>
             </div>
             <div class="_2H35C-container">
-                <modal-calendar v-if="showModal" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></modal-calendar>    
+                <CalendarModal v-if="showModal" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></CalendarModal>    
             </div>
 
     </div>
@@ -16,13 +16,12 @@
 
 <script>
 //import { onMounted } from 'vue';
-import Calendar from './components/Calendar.vue'
-import ModalCalendar from './components/CalendarModal.vue'
+import { defineAsyncComponent } from 'vue'
 import { Formatos } from '@/utils/Formatos.js';
-import { auth} from "../firebase"
+//import { auth} from "../firebase"
 
 
-import { createUserWithEmailAndPassword } from "firebase/auth";
+//import { createUserWithEmailAndPassword } from "firebase/auth";
 //import {useUserStore} from '@/stores/user.js'
 //import {getAll } from "@/apis/modelo.js";
 
@@ -31,8 +30,9 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 export default{
     name: 'book-list',
     components: {
-        Calendar,
-        ModalCalendar
+        Calendar: defineAsyncComponent(() => import('./components/Calendar.vue')),
+        CalendarModal: defineAsyncComponent(() => import('./components/CalendarModal.vue')),
+
     },
     data() {
         return {
@@ -58,8 +58,8 @@ export default{
         },
         async registrarUser() {
             
-            var respuesta = await createUserWithEmailAndPassword(auth,'kevsssinmohu@gmail.com',"1234567");
-            console.log("consultando xD",respuesta)
+           // var respuesta = await createUserWithEmailAndPassword(auth,'kevsssinmohu@gmail.com',"1234567");
+           // console.log("consultando xD",respuesta)
 
         },
         async autenticar() {

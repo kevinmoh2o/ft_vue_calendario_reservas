@@ -142,10 +142,10 @@ export default {
         handleDateclick(clickInfo) {
             this.$emit('dateClick', clickInfo)
         },
-        ...mapActions('journal', ['loadEntries'])
+        ...mapActions('programacionModule', ['loadEntries'])
     },
     computed: {
-        ...mapState( 'journal', ['isLoading'])
+        ...mapState( 'programacionModule', ['isLoading'])
     },
     created() {
         this.loadEntries()

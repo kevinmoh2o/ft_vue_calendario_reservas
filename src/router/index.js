@@ -23,13 +23,13 @@ const routes = [{
         path: '/agenda/books/list',
         name: 'book-list',
         component: () =>
-            import ( /* webpackChunkName: "about" */ '@/agenda/Books.vue')
+            import ( /* webpackChunkName: "about" */ '@/modules/agenda/Books.vue')
     },
     {
         path: '/holas',
         name: 'holas',
         component: () =>
-            import ( /* webpackChunkName: "about" */ '@/agenda/components/CalendarModal.vue')
+            import ( /* webpackChunkName: "about" */ '@/modules/agenda/components/CalendarModal.vue')
     }
 ]
 
