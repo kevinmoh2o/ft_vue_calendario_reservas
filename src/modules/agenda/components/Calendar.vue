@@ -13,8 +13,8 @@
   import interactionPlugin from '@fullcalendar/interaction'
   import esLocale from "@fullcalendar/core/locales/es";
 
-import { mapActions, mapState } from 'vuex'
-  
+import { mapActions, mapState ,mapGetters,mapMutations} from 'vuex'
+//import investigacionApi from '@/apis/investigacionapi'
   //import modeloEvents from '../../composables/modeloEvents.js'
   //import { reactive, watch,onMounted   } from 'vue';
   
@@ -132,9 +132,9 @@ export default {
                 slotMinTime: "08:00:00",
 
                 dateClick: this.handleDateclick,
-                //events: counterStore.user
+                events: this.getentriesTest()
             },
-            eventsData: []
+            //eventsData: this.getentriesTest()
 
         }
     },
@@ -142,13 +142,38 @@ export default {
         handleDateclick(clickInfo) {
             this.$emit('dateClick', clickInfo)
         },
-        ...mapActions('programacionModule', ['loadEntries'])
+        //...mapActions('programacionModule', ['loadEntries']),
+        ...mapGetters('programacionModule', ['getEntriesByTerm']),
+        ...mapMutations('programacionModule', ['setEntries']),
+        getentriesTest(){
+          //console.log(this.loadEntries);
+          return this.getEntriesByTerm()
+        },
+        setearInicio(value){
+          return value;
+        }
     },
     computed: {
-        ...mapState( 'programacionModule', ['isLoading'])
+        ...mapState( 'programacionModule', ['isLoading']),
+        ...mapActions('programacionModule', ['loadEntries']),
     },
-    created() {
-        this.loadEntries()
+    async created() {
+      this.setEntries();
+      this.getentriesTest();
+      console.log("created")
+      console.log(this.getentriesTest())
+      /* var data = [];
+    var respuesta = await investigacionApi.get(`/resultados.json`);
+    
+    const myObj = respuesta.data;
+    console.log(myObj);
+    for (const key in myObj) {
+        const value = myObj[key];
+        
+        data.push(value);
+      }
+      console.log(data);
+      this.setearInicio(data) */
     },
     watch: {
 

@@ -1,9 +1,8 @@
 import axios from 'axios'
 
 
-const journalApi = axios.create({
+const investigacionApi = axios.create({
     baseURL: 'https://luna-covid-efwqev.firebaseio.com'
 })
 
-
-export default journalApi
+export default investigacionApi
