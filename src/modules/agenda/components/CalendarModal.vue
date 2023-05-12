@@ -29,19 +29,19 @@
         </div>
 
         <div class="horaini">
-          <vue-timepicker placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
+          <vue-timepicker input-width="320px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
         </div>
 
-        <div class="horafin">
+        <!-- <div class="horafin">
           <vue-timepicker placeholder="Hasta HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
-        </div>
+        </div> -->
 
         <div class="link">
           <input placeholder="Link..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
         </div>
 
         <div class="nota">
-          <textarea placeholder="Nota..." name="message" rows="2"></textarea>
+          <textarea placeholder="Nota..." name="message" ></textarea>
         </div>
 
         <div class="boton1">
@@ -166,13 +166,26 @@ export default {
 
 /* Or, with node_module alias path like: */
 @import '~vue3-timepicker/dist/VueTimepicker.css';
+.vue__time-picker-dropdown {
+  z-index: 5000;
+  width: 25em;
+}
+
+.vue__time-picker .dropdown ul li:not([disabled]).active {
+  background: steelblue;
+}
+
+/* When using "append-to-body" */
+.vue__time-picker-dropdown ul li:not([disabled]).active {
+  background: steelblue;
+}
 
 input{
   width: 100%;
+  
 }
 
 .titulo{
-  grid-column: 1 / -1;
   grid-area:titulo;
 }
 
@@ -184,27 +197,23 @@ input{
 
 
 .selecpatient{
-  grid-column: 1 / -1;
   grid-area:selecpatient;
   width: 320px;
+  text-align: right;
 }
 .fecha{
   /* padding: 4.8px; */
   grid-area:fecha;
-  width: 160px;
 }
 
 .duracion{
   /* padding: 4.8px; */
   grid-area:duracion;
-  width: 160px;
 }
 
 
 .link{
-  grid-column: 1 / -1;
   grid-area:link;
-  width: 320px;
 }
 
 .horaini{
@@ -218,17 +227,29 @@ input{
 }
 
 .nota{
-  grid-column: 1 / -1;
-  margin: none;
+
+  margin: 0;
   grid-area:nota;
-  width: 320px;
+  height: 100px;
+
 }
 
 
 textarea{
   width: 100%;
-  grid-area:textarea;
+  height: 100%;
+  box-sizing: border-box; /* Incluye el tamaño del borde y el relleno en el ancho y la altura */
+  resize: none; 
 }
+
+.boton1{
+  grid-area:boton1;
+}
+
+.boton2{
+  grid-area:boton2;
+}
+
 
 .cal-grcontainer {
   background-color: #fff;
@@ -241,7 +262,7 @@ textarea{
   margin: auto;
   min-width: 400px;
   display: grid;
-  /* gap: 10px; */
+  gap: 2px;
     grid-template-areas: 
         "titulo"
         "automatico"
@@ -249,7 +270,6 @@ textarea{
         "fecha"
         "duracion"
         "horaini"
-        "horafin"
         "link"
         "nota"
         "boton1"
@@ -259,6 +279,7 @@ textarea{
 
 @media (min-width:550px){
     .cal-grcontainer{
+      width: 682px;
         /* grid-template-columns: 200px auto;
         grid-template-rows: 100px 50px auto 100px;
         grid-template-areas: 
@@ -266,16 +287,17 @@ textarea{
         "navbar navbar"
         "sidebar main"
         "footer footer"; */
+        
+        
         grid-template:
         "titulo titulo" 50px
         "automatico automatico" 150px
-        "selecpatient selecpatient" 70px
-        "fecha duracion" 70px
-        "horaini horafin" 70px
-        "link link" 70px 
+        "selecpatient horaini" 55px
+        "fecha duracion" 55px
+        "link link" 55px 
         "nota nota" 100px
         "boton1 boton2" 100px /
-        50% 50%;
+        320px 320px;
     }
 }
 
@@ -525,7 +547,9 @@ p.form-field label,
 
 .max-h-select {
   max-height: 300px;
-}</style>
+}
+
+</style>
 
 
         
