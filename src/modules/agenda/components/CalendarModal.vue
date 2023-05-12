@@ -1,7 +1,4 @@
 <template>
-  <!-- <div class="cal-grcontainer"> -->
-    <!-- <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"> -->
-
 
       <form class="cal-grcontainer">
 
@@ -9,42 +6,42 @@
           <h1 class="typography_h3__AkmD7" style="color: rgb(14, 16, 26);">Agendar una cita</h1>
         </div>
 
+        <div class="automatico">
+          <p>Licenciado a cargo: Carlos Perez</p>
+          <p>Fecha de cita: 01/06/2023</p>
+          <p>Duracion: 1h 20min</p>
+          <hr>
+        </div>
+
         <div class="selecpatient">
-          <label class="field-label" for="idSelector">Paciente: *</label>
-          <select name="idSelector" id="idSelector" class="select touched" v-model="form.title" onchange="" required="">
+          <select name="idSelector" id="idSelector" v-model="form.title" onchange="" required="true">
+            <option value="" selected>Selecciona un paciente</option>
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
         </div>
 
-        
-
         <div class="fecha">
-          <label class="field-label" for="id_agenda">Fecha:</label>
-          <input type="text" name="id_agenda" v-model="fFechaDeProgramacion" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+          <input placeholder="Fecha" type="text" name="id_agenda" v-model="fFechaDeProgramacion" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
         </div>
+
         <div class="duracion">
-          <label class="field-label" for="id_agenda">Duración:</label>
-          <input type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+          <input placeholder="Duración" type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
         </div>
 
         <div class="horaini">
-          <label class="field-label" for="id_agenda">Desde:</label>
-          <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
+          <vue-timepicker placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
         </div>
 
         <div class="horafin">
-          <label class="field-label" for="id_agenda">Hasta:</label>
-          <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
+          <vue-timepicker placeholder="Hasta HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
         </div>
 
         <div class="link">
-          <label class="field-label" for="id_agenda">Link:</label>
-          <input v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
+          <input placeholder="Link..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
         </div>
 
         <div class="nota">
-          <label class="field-label" >Nota:</label>
-          <textarea name="message" rows="2"></textarea>
+          <textarea placeholder="Nota..." name="message" rows="2"></textarea>
         </div>
 
         <div class="boton1">
@@ -53,86 +50,7 @@
         <div class="boton2">
           <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
         </div>
-
-        
-        
-        
-
-
-        <!-- <div class="signin_textFieldsContainer__WIXUm">
-          <div class>
-            <div class="mb-4">
-              
-              <p class="form-field  Form_saleshelp pd-select required required-custom    form-field-primary">
-                <label class="field-label" for="idSelector">Buscar Usuario: *</label>
-                <select name="idSelector" id="idSelector" class="select touched" v-model="form.title" onchange="" required="">
-                  <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
-                </select>
-              </p>
-
-              
-              <p class="form-field add-text-before email pd-text required required-custom    ">
-                <label class="field-label" for="id_agenda">Link:</label>
-                <input v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
-              </p>
-
-              <p>
-                <label class="field-label" >Nota:</label>
-                <textarea name="message" rows="3" cols="40"></textarea>
-              </p>
-              
-
-              
-              <div class="rf-input--large gutter-top rf-input">
-                <div class="rf-input__inner">
-                  <div class="rf-input__wrapper arrival-input">
-                    <label class="field-label" for="id_agenda">Desde:</label>
-                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
-                  </div>
-                  <div class="rf-input__wrapper return-date-input">
-                    <label class="field-label" for="id_agenda">Hasta:</label>
-                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
-                  </div>
-                </div>
-              </div>
-
-              <div class="rf-input--large gutter-top rf-input">
-                <div class="rf-input__inner">
-                  <div class="rf-input__wrapper arrival-input">
-                    <label class="field-label" for="id_agenda">Fecha:</label>
-                    <input type="text" name="id_agenda" v-model="fFechaDeProgramacion" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
-                  </div>
-                  <div class="rf-input__wrapper return-date-input">
-                    <label class="field-label" for="id_agenda">Duración:</label>
-                    <input type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
-                  </div>
-                </div>
-              </div>
-
-
-            </div>
-
-
-          </div>
-        </div> -->
-
-
-          <!-- <div class="rf-input--large gutter-top rf-input">
-            <div class="rf-input__inner">
-              <div class="rf-input__wrapper arrival-input">
-                <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
-              </div>
-              <div class="rf-input__wrapper return-date-input">
-                <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
-              </div>
-            </div>
-          </div> -->
-
       </form>
-
-
-    <!-- </div> -->
- <!--  </div> -->
 </template>
   
 <script>
@@ -249,40 +167,76 @@ export default {
 /* Or, with node_module alias path like: */
 @import '~vue3-timepicker/dist/VueTimepicker.css';
 
-.titulo{
-  grid-column: 1 / -1;
-}
-
-textarea{
+input{
   width: 100%;
 }
 
+.titulo{
+  grid-column: 1 / -1;
+  grid-area:titulo;
+}
+
+.automatico{
+  grid-area:automatico;
+  text-align: left;
+}
+
+
+
 .selecpatient{
   grid-column: 1 / -1;
+  grid-area:selecpatient;
+  width: 320px;
 }
 .fecha{
-  padding: 4.8px;
+  /* padding: 4.8px; */
+  grid-area:fecha;
+  width: 160px;
 }
 
 .duracion{
-  padding: 4.8px;
+  /* padding: 4.8px; */
+  grid-area:duracion;
+  width: 160px;
 }
-.nota{
-  grid-column: 1 / -1;
-  margin: none;
-}
+
 
 .link{
   grid-column: 1 / -1;
+  grid-area:link;
+  width: 320px;
 }
+
+.horaini{
+  grid-area:horaini;
+  /* text-align: left; */
+}
+
+.horafin{
+  /* text-align:right ; */
+  grid-area:horafin;
+}
+
+.nota{
+  grid-column: 1 / -1;
+  margin: none;
+  grid-area:nota;
+  width: 320px;
+}
+
+
+textarea{
+  width: 100%;
+  grid-area:textarea;
+}
+
 .cal-grcontainer {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 12px 48px rgba(26, 33, 52, .11);
   align-items: center;
   align-content: center;
-  max-width: 460px;
-  padding: 32px;
+  padding: 20px;
   width: 50%;
   margin: auto;
   min-width: 400px;
@@ -290,6 +244,7 @@ textarea{
   /* gap: 10px; */
     grid-template-areas: 
         "titulo"
+        "automatico"
         "selecpatient"
         "fecha"
         "duracion"
@@ -302,7 +257,7 @@ textarea{
         ;
 }
 
-@media (min-width:400px){
+@media (min-width:550px){
     .cal-grcontainer{
         /* grid-template-columns: 200px auto;
         grid-template-rows: 100px 50px auto 100px;
@@ -313,6 +268,7 @@ textarea{
         "footer footer"; */
         grid-template:
         "titulo titulo" 50px
+        "automatico automatico" 150px
         "selecpatient selecpatient" 70px
         "fecha duracion" 70px
         "horaini horafin" 70px
@@ -570,3 +526,77 @@ p.form-field label,
 .max-h-select {
   max-height: 300px;
 }</style>
+
+
+        
+        
+
+
+        <!-- <div class="signin_textFieldsContainer__WIXUm">
+          <div class>
+            <div class="mb-4">
+              
+              <p class="form-field  Form_saleshelp pd-select required required-custom    form-field-primary">
+                <label class="field-label" for="idSelector">Buscar Usuario: *</label>
+                <select name="idSelector" id="idSelector" class="select touched" v-model="form.title" onchange="" required="">
+                  <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
+                </select>
+              </p>
+
+              
+              <p class="form-field add-text-before email pd-text required required-custom    ">
+                <label class="field-label" for="id_agenda">Link:</label>
+                <input v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
+              </p>
+
+              <p>
+                <label class="field-label" >Nota:</label>
+                <textarea name="message" rows="3" cols="40"></textarea>
+              </p>
+              
+
+              
+              <div class="rf-input--large gutter-top rf-input">
+                <div class="rf-input__inner">
+                  <div class="rf-input__wrapper arrival-input">
+                    <label class="field-label" for="id_agenda">Desde:</label>
+                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
+                  </div>
+                  <div class="rf-input__wrapper return-date-input">
+                    <label class="field-label" for="id_agenda">Hasta:</label>
+                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rf-input--large gutter-top rf-input">
+                <div class="rf-input__inner">
+                  <div class="rf-input__wrapper arrival-input">
+                    <label class="field-label" for="id_agenda">Fecha:</label>
+                    <input type="text" name="id_agenda" v-model="fFechaDeProgramacion" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+                  </div>
+                  <div class="rf-input__wrapper return-date-input">
+                    <label class="field-label" for="id_agenda">Duración:</label>
+                    <input type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+
+          </div>
+        </div> -->
+
+
+          <!-- <div class="rf-input--large gutter-top rf-input">
+            <div class="rf-input__inner">
+              <div class="rf-input__wrapper arrival-input">
+                <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
+              </div>
+              <div class="rf-input__wrapper return-date-input">
+                <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
+              </div>
+            </div>
+          </div> -->

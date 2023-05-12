@@ -2,28 +2,31 @@
 // export const myAction = ( state ) => {
 
 // }
-import investigacionApi from '@/apis/investigacionapi'
 
-export const setEntries = async ( state  ) =>  {
-    var data = [];
-    var respuesta = await investigacionApi.get(`/resultados.json`);
-    
-    const myObj = respuesta.data;
-    console.log(myObj);
-    for (const key in myObj) {
-        const value = myObj[key];
-        
-        data.push(value);
-      }
-      console.log(data);
-      console.log(state);
-    state.entries=data
+
+export const setEntries = (state, entries) => {
+  state.entries = entries
+  state.isLoading = false
 }
 
-export const updateEntry = (/* state */ ) => {
-
+export const updateEntry = (state, entry) => {
+  const index = state.entries.findIndex(e => e.id === entry.id)
+  state.entries.splice(index, 1, entry)
 }
 
-export const addEntry = (/* state */ ) => {
-    
+export const addEntry = (state, entry) => {
+  state.entries.push(entry)
 }
+
+//export const setEntries = async ( state  ) =>  {
+//    
+//}
+//
+//export const updateEntry = (/* state */ ) => {
+//
+//}
+//
+//export const addEntry = (/* state */ ) => {
+//    
+//}
+//

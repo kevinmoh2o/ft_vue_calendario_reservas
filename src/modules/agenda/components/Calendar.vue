@@ -1,6 +1,16 @@
 <template>
     <div>
-      <Fullcalendar :options="calendarOptions"></Fullcalendar>
+      <Fullcalendar ref="fullCalendar" :options="calendarOptions">
+        <template v-slot:eventContent='arg'>
+          <b>{{ arg.event.title }}</b>
+          <div>
+            <button>
+              <font-awesome-icon icon="user" />
+              Click me
+            </button>
+          </div>
+        </template>
+      </Fullcalendar>
     </div>
   </template>
   
@@ -14,9 +24,159 @@
   import esLocale from "@fullcalendar/core/locales/es";
 
 import { mapActions, mapState ,mapGetters,mapMutations} from 'vuex'
-//import investigacionApi from '@/apis/investigacionapi'
-  //import modeloEvents from '../../composables/modeloEvents.js'
-  //import { reactive, watch,onMounted   } from 'vue';
+//import { ref } from 'vue';
+
+export default {
+    name: 'calendario-dos',
+    components: {
+        Fullcalendar
+    },
+   /*  async setup() {
+      const calendarRef = ref(null);
+    
+    const handleEventClick = (clickInfo) => {
+      console.log('Event clicked', clickInfo.event);
+    };
+    
+    const eventContent = (arg) => {
+      return {
+        html: `
+          <div class="fc-content">
+            <div class="fc-title">${arg.event.title}</div>
+            <div class="fc-buttons">
+              <button class="fc-button fc-edit-button">Editar</button>
+              <button class="fc-button fc-delete-button">Eliminar</button>
+            </div>
+          </div>
+        `,
+        backgroundColor: arg.event.backgroundColor,
+        borderColor: arg.event.borderColor,
+        textColor: arg.event.textColor,
+        classNames: ['fc-event']
+      };
+    };
+    
+    const calendarOptions = {
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+      initialView: 'dayGridMonth',
+      locale: esLocale,
+      headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'timeGridWeek,dayGridMonth,listDay',
+      },
+      allDaySlot: false,
+      editable: true,
+      selectable: true,
+      weekends: true,
+      slotMinTime: "08:00:00",
+      events: [],
+      dateClick: this.handleDateclick,
+      eventClick: handleEventClick,
+      eventContent: eventContent
+    };
+
+    return {
+      calendarRef,
+      calendarOptions
+    };
+    }, */
+    data() {
+     /*  const calendarRef = ref(null);
+    
+    const handleEventClick = (clickInfo) => {
+      console.log('Event clicked', clickInfo.event);
+    };
+    
+    const eventContent = (arg) => {
+      return {
+        html: `
+          <div class="fc-content">
+            <div class="fc-title">${arg.event.title}</div>
+            <div class="fc-buttons">
+              <button class="fc-button fc-edit-button">Editar</button>
+              <button class="fc-button fc-delete-button">Eliminar</button>
+            </div>
+          </div>
+        `,
+        backgroundColor: arg.event.backgroundColor,
+        borderColor: arg.event.borderColor,
+        textColor: arg.event.textColor,
+        classNames: ['fc-event']
+      };
+    }; */
+        
+      const  calendarOptions= {
+                plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+                initialView: 'dayGridMonth',
+                locale: esLocale,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'timeGridWeek,dayGridMonth,listDay',
+                },
+                allDaySlot: false,
+                nowIndicator: true,
+                editable: true,
+                selectable: true,
+                weekends: true,
+                slotMinTime: "08:00:00",
+                events: [],
+                dateClick: this.handleDateclick,
+                eventChange:this.eventChangeClick,
+                //eventClick: handleEventClick,
+                //eventContent: eventContent
+            };
+            //eventsData: this.getentriesTest()
+      return {
+        //calendarRef,
+      calendarOptions
+      }
+    },
+    /* mounted(){
+      let calendarApi = this.$refs.fullCalendar.getApi()
+      calendarApi.next()
+    },  */ 
+    methods: {
+        handleDateclick(clickInfo) {
+            this.$emit('dateClick', clickInfo)
+        },
+        eventChangeClick(arg){
+          console.log("arg",arg);
+        },
+        ...mapActions('programacionModule', ['loadEntries']),
+        ...mapGetters('programacionModule', ['getEntriesByTerm']),
+        ...mapMutations('programacionModule', ['setEntries']),
+        getentriesTest(){
+          //console.log(this.loadEntries);
+          return this.getEntriesByTerm()
+        },
+        setearInicio(value){
+          return value;
+        }
+    },
+    computed: {
+        ...mapState( 'programacionModule', ['isLoading']),
+    },
+    async created() {
+      
+      this.loadEntries();
+      this.calendarOptions.events = this.getentriesTest();
+      //this.$store.dispatch('programacionModule/loadEntries')
+    }, 
+    watch: {
+      entries() {
+        this.calendarOptions.events = this.entries;
+      }
+    }
+
+}
+</script>
+
+<style scoped>
+
+</style>
+
   
 /*   
 const { getEvents,setEvents } = modeloEvents();
@@ -107,80 +267,3 @@ const { getEvents,setEvents } = modeloEvents();
     },
   }
    */
-export default {
-    name: 'calendario-dos',
-    components: {
-        Fullcalendar
-    },
-    async setup() {
-    },
-    data() {
-        return {
-            calendarOptions: {
-                plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-                initialView: 'dayGridMonth',
-                locale: esLocale,
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'timeGridWeek,dayGridMonth,listDay',
-                },
-                allDaySlot: false,
-                editable: true,
-                selectable: true,
-                weekends: true,
-                slotMinTime: "08:00:00",
-
-                dateClick: this.handleDateclick,
-                events: this.getentriesTest()
-            },
-            //eventsData: this.getentriesTest()
-
-        }
-    },
-    methods: {
-        handleDateclick(clickInfo) {
-            this.$emit('dateClick', clickInfo)
-        },
-        //...mapActions('programacionModule', ['loadEntries']),
-        ...mapGetters('programacionModule', ['getEntriesByTerm']),
-        ...mapMutations('programacionModule', ['setEntries']),
-        getentriesTest(){
-          //console.log(this.loadEntries);
-          return this.getEntriesByTerm()
-        },
-        setearInicio(value){
-          return value;
-        }
-    },
-    computed: {
-        ...mapState( 'programacionModule', ['isLoading']),
-        ...mapActions('programacionModule', ['loadEntries']),
-    },
-    async created() {
-      this.setEntries();
-      this.getentriesTest();
-      console.log("created")
-      console.log(this.getentriesTest())
-      /* var data = [];
-    var respuesta = await investigacionApi.get(`/resultados.json`);
-    
-    const myObj = respuesta.data;
-    console.log(myObj);
-    for (const key in myObj) {
-        const value = myObj[key];
-        
-        data.push(value);
-      }
-      console.log(data);
-      this.setearInicio(data) */
-    },
-    watch: {
-
-    }
-
-}
-</script>
-
-<style scoped>
-</style>
