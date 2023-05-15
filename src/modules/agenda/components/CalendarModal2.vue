@@ -153,16 +153,18 @@ export default {
 
 }
 
-.container2  {
-  box-shadow: -1px 1px 7px 0px rgba(0, 0, 0, 0.75);
-  background-color: #fff;
-  display: grid;
-  gap: 0;
-  width: 450px;
-  height: 200px;
-  border-radius: 10px;
-  grid-template:
-  ". botones botones botones" 40px
+.container2{
+
+box-shadow: -1px 1px 7px 0px rgba(0, 0, 0, 0.75);
+background-color: #fff;
+display: grid;
+gap: 0;
+width: 350px;
+height: 200px;
+border-radius: 10px;
+margin: 0;
+grid-template:
+        ". botones botones botones" 40px
         "icon1 titulo titulo titulo" 40px
         ". fecha fecha fecha" 40px
         "icon2 alarma alarma alarma" 40px
@@ -171,19 +173,30 @@ export default {
         ;
 }
 
-/* @media (min-width:400px){
-    .container2{
 
-        grid-template:
-        "vacio editar  "  50px
-        "eliminar close  "  50px
-        "icon1 titulo " 50px
-        "fecha fecha  " 50px
-        "icon2 alarma " 50px
-        "icon3 owner " 50px/
-        50px 50px 50px 50px
-        ;
+@media (min-width:600px){
+    .container2  {
+    box-shadow: -1px 1px 7px 0px rgba(0, 0, 0, 0.75);
+    background-color: #fff;
+    display: grid;
+    gap: 0;
+    width: 450px;
+    height: 200px;
+    border-radius: 10px;
+    align-content: center;
+    align-items: center;
+    align-self: center;
+    text-align: center;
+    margin: 0;
+    grid-template:
+            ". botones botones botones" 40px
+            "icon1 titulo titulo titulo" 40px
+            ". fecha fecha fecha" 40px
+            "icon2 alarma alarma alarma" 40px
+            "icon3 owner owner owner" 40px/
+            50px 40px 40px auto
+            ;
     }
-} */
+}
 
 </style>

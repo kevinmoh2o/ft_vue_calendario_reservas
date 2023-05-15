@@ -2,7 +2,8 @@
   <nav>
     <router-link to="/">Home</router-link> 
     <router-link to="/agenda/books/list">About</router-link>
-    <router-link to="/holas">Holas</router-link>
+    <router-link to="/holas"> modal1 </router-link>
+    <router-link to="/modal2"> modal2 </router-link>
   </nav>
   <router-view/>
 </template>
@@ -28,4 +29,6 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
+
+
 </style>

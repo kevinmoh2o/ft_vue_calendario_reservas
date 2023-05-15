@@ -3,7 +3,7 @@
 //  return state
 // }
 
-export const getEntriesByTerm = ( state ) => {
+export const getEvents = ( state ) => {
     return state.entries
 }
 

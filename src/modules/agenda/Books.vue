@@ -15,18 +15,9 @@
 </template>
 
 <script>
-//import { onMounted } from 'vue';
 import { defineAsyncComponent } from 'vue'
 import { Formatos } from '@/utils/Formatos.js';
-//import { auth} from "../firebase"
 
-
-//import { createUserWithEmailAndPassword } from "firebase/auth";
-//import {useUserStore} from '@/stores/user.js'
-//import {getAll } from "@/apis/modelo.js";
-
-
-//const counterStore = useUserStore();
 export default{
     name: 'book-list',
     components: {
@@ -90,9 +81,6 @@ export default{
         saveAppt(param){
             console.log("param")
             console.log({param})
-            /* if(param.link===''){
-                alert("Complete el campo Link")
-            } */
             this.$data.showModal = false;
         }
     },

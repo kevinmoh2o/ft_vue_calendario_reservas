@@ -5,12 +5,15 @@
           <b>{{ arg.event.title }}</b>
           <div>
             <button>
-              <font-awesome-icon icon="user" />
+              <i class="fa-solid fa-pen-to-square" style="color: #73777b;"></i>
               Click me
             </button>
           </div>
         </template>
       </Fullcalendar>
+      <Dialogs v-model="showModal">
+        <CalendarModal2 v-if="showModal" :event="selectedEvent" @close="closeModal" />
+      </Dialogs>
     </div>
   </template>
   
@@ -22,90 +25,20 @@
   import listPlugin from '@fullcalendar/list'
   import interactionPlugin from '@fullcalendar/interaction'
   import esLocale from "@fullcalendar/core/locales/es";
-
-import { mapActions, mapState ,mapGetters,mapMutations} from 'vuex'
+  import CalendarModal2 from "@/modules/agenda/components/CalendarModal2.vue";
+  import { Dialogs } from 'v-dialogs'
+  import { mapActions, mapState ,mapGetters,mapMutations} from 'vuex'
 //import { ref } from 'vue';
 
 export default {
     name: 'calendario-dos',
     components: {
-        Fullcalendar
+        Fullcalendar,
+        CalendarModal2,
+        Dialogs
     },
-   /*  async setup() {
-      const calendarRef = ref(null);
-    
-    const handleEventClick = (clickInfo) => {
-      console.log('Event clicked', clickInfo.event);
-    };
-    
-    const eventContent = (arg) => {
-      return {
-        html: `
-          <div class="fc-content">
-            <div class="fc-title">${arg.event.title}</div>
-            <div class="fc-buttons">
-              <button class="fc-button fc-edit-button">Editar</button>
-              <button class="fc-button fc-delete-button">Eliminar</button>
-            </div>
-          </div>
-        `,
-        backgroundColor: arg.event.backgroundColor,
-        borderColor: arg.event.borderColor,
-        textColor: arg.event.textColor,
-        classNames: ['fc-event']
-      };
-    };
-    
-    const calendarOptions = {
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-      initialView: 'dayGridMonth',
-      locale: esLocale,
-      headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'timeGridWeek,dayGridMonth,listDay',
-      },
-      allDaySlot: false,
-      editable: true,
-      selectable: true,
-      weekends: true,
-      slotMinTime: "08:00:00",
-      events: [],
-      dateClick: this.handleDateclick,
-      eventClick: handleEventClick,
-      eventContent: eventContent
-    };
 
-    return {
-      calendarRef,
-      calendarOptions
-    };
-    }, */
     data() {
-     /*  const calendarRef = ref(null);
-    
-    const handleEventClick = (clickInfo) => {
-      console.log('Event clicked', clickInfo.event);
-    };
-    
-    const eventContent = (arg) => {
-      return {
-        html: `
-          <div class="fc-content">
-            <div class="fc-title">${arg.event.title}</div>
-            <div class="fc-buttons">
-              <button class="fc-button fc-edit-button">Editar</button>
-              <button class="fc-button fc-delete-button">Eliminar</button>
-            </div>
-          </div>
-        `,
-        backgroundColor: arg.event.backgroundColor,
-        borderColor: arg.event.borderColor,
-        textColor: arg.event.textColor,
-        classNames: ['fc-event']
-      };
-    }; */
-        
       const  calendarOptions= {
                 plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
                 initialView: 'dayGridMonth',
@@ -124,35 +57,69 @@ export default {
                 events: [],
                 dateClick: this.handleDateclick,
                 eventChange:this.eventChangeClick,
+                eventClick: (info) => {
+                  console.log('select')
+                  console.log(info)
+                  const cal = info.event;
+                  console.log("cal",cal)
+                  console.log("cal",cal.start)
+                  console.log("cal",cal.title)
+                  console.log("cal",cal.end)
+                  console.log("cal",cal.extendedProps.link)
+                  console.log("cal",cal.extendedProps.description)
+                  console.log("cal",cal.backgroundColor)
+
+                  /* var clickX = info.jsEvent.pageX;
+                  var clickY = info.jsEvent.pageY;
+                  
+                  // calcula la posición del modal
+                  var modalX = clickX + 20; // ajuste el número 20 a la distancia que desee del clic
+                  var modalY = clickY + 20; // ajuste el número 20 a la distancia que desee del clic
+                  
+                  // abre el modal en la posición calculada */
+                  this.showModal = true;
+                },
+                eventAdd: (info) => {
+                  console.log('create')
+                  console.log(info)
+                },
+                eventRemove: (arg) => {
+                  console.log('eventRemove')
+                  console.log(arg)
+                },
                 //eventClick: handleEventClick,
                 //eventContent: eventContent
             };
+            var showModal = false;
             //eventsData: this.getentriesTest()
       return {
-        //calendarRef,
-      calendarOptions
+      calendarOptions,
+      showModal
       }
     },
-    /* mounted(){
-      let calendarApi = this.$refs.fullCalendar.getApi()
-      calendarApi.next()
-    },  */ 
     methods: {
         handleDateclick(clickInfo) {
             this.$emit('dateClick', clickInfo)
+            console.log("dateClick")
         },
         eventChangeClick(arg){
+          console.log('eventChange')
           console.log("arg",arg);
         },
         ...mapActions('programacionModule', ['loadEntries']),
-        ...mapGetters('programacionModule', ['getEntriesByTerm']),
+        ...mapGetters('programacionModule', ['getEvents']),
         ...mapMutations('programacionModule', ['setEntries']),
         getentriesTest(){
-          //console.log(this.loadEntries);
-          return this.getEntriesByTerm()
+          return this.getEvents()
         },
         setearInicio(value){
           return value;
+        },
+        openModal() {
+          this.showModal = true;
+        },
+        closeModal() {
+          this.showModal = false
         }
     },
     computed: {
@@ -160,14 +127,17 @@ export default {
     },
     async created() {
       
-      this.loadEntries();
+      await this.loadEntries();
       this.calendarOptions.events = this.getentriesTest();
-      //this.$store.dispatch('programacionModule/loadEntries')
     }, 
     watch: {
       entries() {
         this.calendarOptions.events = this.entries;
+      },
+      getEventsWatch() {
+        this.calendarOptions.events = this.getEvents();
       }
+      
     }
 
 }

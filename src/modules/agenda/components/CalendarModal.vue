@@ -7,29 +7,34 @@
         </div>
 
         <div class="automatico">
-          <p>Licenciado a cargo: Carlos Perez</p>
-          <p>Fecha de cita: 01/06/2023</p>
-          <p>Duracion: 1h 20min</p>
+          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass"> Carlos Perez</label><br>
+          <label><strong>Fecha de cita:</strong></label><label class="lblClass"> 01/06/2023</label><br>
+          <label><strong>Duracion:</strong></label><label class="lblClass"> 1h 20min</label><br>
+         
+          
+
+
           <hr>
         </div>
 
         <div class="selecpatient">
-          <select name="idSelector" id="idSelector" v-model="form.title" onchange="" required="true">
+          <select class="entradaStyle" name="idSelector" id="idSelector" v-model="form.title" onchange="" required="true">
             <option value="" selected>Selecciona un paciente</option>
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
         </div>
 
-        <div class="fecha">
+        <!-- <div class="fecha">
           <input placeholder="Fecha" type="text" name="id_agenda" v-model="fFechaDeProgramacion" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
         </div>
 
         <div class="duracion">
           <input placeholder="Duración" type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
-        </div>
+        </div> -->
 
         <div class="horaini">
-          <vue-timepicker input-width="320px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
+          <vue-timepicker style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
+          
         </div>
 
         <!-- <div class="horafin">
@@ -37,18 +42,18 @@
         </div> -->
 
         <div class="link">
-          <input placeholder="Link..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
+          <input  placeholder="Link ..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
         </div>
 
         <div class="nota">
-          <textarea placeholder="Nota..." name="message" ></textarea>
+          <textarea placeholder="Nota ..." name="message" v-model="form.extendedProps.description"></textarea>
         </div>
 
         <div class="boton1">
-          <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
+          <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
         </div>
         <div class="boton2">
-          <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
+          <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
         </div>
       </form>
 </template>
@@ -56,11 +61,11 @@
 <script>
 import VueTimepicker from 'vue3-timepicker';
 import moment from 'moment';
-//import {useUserStore} from '@/stores/user.js'
 import { Formatos } from '@/utils/Formatos.js';
+import { mapActions} from 'vuex'
+import { mapMutations} from 'vuex'
 
 
-//const counterStore = useUserStore();
 export default {
   name: "modal-calendar",
   props: {
@@ -80,7 +85,12 @@ export default {
         horaFin: {},
         fechaIni:'',
         fechaFin:'',
-        userid: ""
+        backgroundColor:"",
+        userid: "",
+        extendedProps:{
+          description: "",
+        }
+
       },
       date: null,
       fFechaDeProgramacion:this.fechaProgramar,
@@ -97,21 +107,31 @@ export default {
     VueTimepicker
   },
   methods: {
+    ...mapActions('programacionModule', ['createEntry']),
+    ...mapMutations('programacionModule', ['addEntry']),
     async store(form) {
       this.$emit('saveAppt', form);
-      var fi = Formatos.fechaStrinToObject(form.fechaIni);
-      var ff = Formatos.fechaStrinToObject(form.fechaFin);
+      //var fi = Formatos.fechaStrinToObject(form.fechaIni);
+      //var ff = Formatos.fechaStrinToObject(form.fechaFin);
       var objeto = {
         title:form.title,
         link:form.link,
-        fechaIni:fi,
-        fechaFin:ff,
+        start:form.fechaIni,
+        end:Formatos.fechaZeroToDB(form.fechaFin),
         userid:form.userid,
-        backgroundColor: "red",
+        backgroundColor: "#3788D8",
         borderColor: "darkred",
+        extendedProps:{
+          description: form.extendedProps.description
+        }
       }
-      console.log(objeto)
-      //await counterStore.insert('agenda',objeto);
+      console.log(objeto);
+      var created = await this.createEntry(objeto)
+      if(created){
+        console.log("created",created);
+        this.addEntry(objeto)
+      }
+      
     },
     changeIniHour: function() {
       this.setTimeView();
@@ -120,13 +140,24 @@ export default {
       this.setTimeView();
     },
     setTimeView(){
-      this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.form.horaIni);
-      this.form.fechaFin = this.horaFecha(this.fFechaDeProgramacion,this.form.horaFin);
-      var consultaTime = this.diferencia;
+      
+      if(this.form.horaIni.HH && this.form.horaIni.mm){
+        console.log("setTimeView")
+        console.log(this.form.horaIni)
+        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.form.horaIni);
+        
+        this.form.fechaFin = this.sumarleUnaHora(this.form.fechaIni)
+        console.log(typeof this.form.fechaIni);
+        console.log(typeof this.form.fechaFin);
+      }
+
+      
+      //this.form.fechaFin = this.horaFecha(this.fFechaDeProgramacion,this.form.horaFin);
+     /*  var consultaTime = this.diferencia;
       this.indicadorTotalTime=(consultaTime.estado)
         ?this.minToText(consultaTime.minutos)
         :(this.form.horaIni==undefined || this.form.horaIni==undefined)
-            ?'':'Error';
+            ?'':'Error'; */
     },
     minToText(minutos){
       var hor = minutos>=60?Math.floor(minutos/60):0;
@@ -134,7 +165,16 @@ export default {
       return `${hor} h y ${min} min`
     },
     horaFecha(fecha, hora){
-      return `${fecha} ${hora.HH}:${hora.mm}:00`;
+      var parts = fecha.split("/");
+      var day = parts[0];
+      var month = parts[1];
+      var year = parts[2];
+      return `${year + "-" + month + "-" + day}T${hora.HH}:${hora.mm}:00`;
+    },
+    sumarleUnaHora(input){
+      let fecha = new Date(input);
+      fecha.setHours(fecha.getHours() + 1);
+      return fecha
     }
     
   },
@@ -158,48 +198,67 @@ export default {
     },
     
   },
+
+  watch:{
+    /* form: {
+      handler: function(newForm, oldForm) {
+        console.log("newForm",newForm);
+        console.log("oldForm",oldForm);
+      },
+      deep: true
+    } */
+  }
 };
 </script>
   
 <style scoped>
-@import 'vue3-timepicker/dist/VueTimepicker.css';
 
 /* Or, with node_module alias path like: */
 @import '~vue3-timepicker/dist/VueTimepicker.css';
-.vue__time-picker-dropdown {
-  z-index: 5000;
-  width: 25em;
+
+label{
+  font-size: 15px;
 }
 
-.vue__time-picker .dropdown ul li:not([disabled]).active {
-  background: steelblue;
+.lblClass{
+  padding-left: 10px;
 }
 
-/* When using "append-to-body" */
-.vue__time-picker-dropdown ul li:not([disabled]).active {
-  background: steelblue;
-}
+
 
 input{
   width: 100%;
-  
+  height: 40px;
+  border-radius: 5px;
+  padding-left: 10px;
+  border: 1px solid #A9A9A9;
+  font-size: 14px;
+}
+
+input::placeholder {
+  font-size: 14px; /* Cambiar el tamaño de letra a 16 píxeles */
 }
 
 .titulo{
   grid-area:titulo;
+  font-family:  Inter, Helvetica, Arial, sans-serif;
+
 }
 
 .automatico{
   grid-area:automatico;
   text-align: left;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 
 
 .selecpatient{
   grid-area:selecpatient;
-  width: 320px;
   text-align: right;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .fecha{
   /* padding: 4.8px; */
@@ -214,11 +273,23 @@ input{
 
 .link{
   grid-area:link;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .horaini{
+  display:flex;
   grid-area:horaini;
-  /* text-align: left; */
+  box-sizing: border-box;
+  border-radius:5px;
+  border-width: 1px;
+  margin-left: 10px;
+  margin-right: 10px;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  height: 40px;
+  /* background-color: #A9A9A9; */
 }
 
 .horafin{
@@ -227,11 +298,11 @@ input{
 }
 
 .nota{
-
   margin: 0;
   grid-area:nota;
   height: 100px;
-
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 
@@ -239,68 +310,68 @@ textarea{
   width: 100%;
   height: 100%;
   box-sizing: border-box; /* Incluye el tamaño del borde y el relleno en el ancho y la altura */
-  resize: none; 
+  resize: none;
+  font-family:  "sans-serif";
+  font-size: 14px;
+  padding-left:10px ;
+  border-radius: 5px;
 }
 
 .boton1{
   grid-area:boton1;
+  text-align: center;
+  text-align: left;
+  margin-left: 10px;
+  
 }
 
 .boton2{
   grid-area:boton2;
+  text-align: right;
+  margin-right: 10px;
 }
 
 
 .cal-grcontainer {
-  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 12px 48px rgba(26, 33, 52, .11);
+  box-shadow: -1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+  background-color: #fff;
   align-items: center;
   align-content: center;
   padding: 20px;
-  width: 50%;
   margin: auto;
-  min-width: 400px;
   display: grid;
-  gap: 2px;
-    grid-template-areas: 
-        "titulo"
-        "automatico"
-        "selecpatient"
-        "fecha"
-        "duracion"
-        "horaini"
-        "link"
-        "nota"
-        "boton1"
-        "boton2"
+  width: 360px;
+  grid-template: 
+        "titulo titulo"50px
+        "automatico automatico"200px
+        "selecpatient selecpatient"50px
+        "horaini horaini"50px
+        "link link"50px
+        "nota nota"110px
+        "boton1 boton2"60px/
+        160px 160px
         ;
 }
 
-@media (min-width:550px){
+@media (min-width:700px){
     .cal-grcontainer{
       width: 682px;
-        /* grid-template-columns: 200px auto;
-        grid-template-rows: 100px 50px auto 100px;
-        grid-template-areas: 
-        "header header"
-        "navbar navbar"
-        "sidebar main"
-        "footer footer"; */
-        
-        
         grid-template:
         "titulo titulo" 50px
-        "automatico automatico" 150px
-        "selecpatient horaini" 55px
-        "fecha duracion" 55px
-        "link link" 55px 
-        "nota nota" 100px
-        "boton1 boton2" 100px /
+        "automatico automatico" 90px
+        "selecpatient horaini" 50px
+        "link link" 50px 
+        "nota nota" 110px
+        "boton1 boton2" 60px /
         320px 320px;
     }
 }
 
+.entradaStyle{
+  border-color: #A9A9A9;
+
+}
 .form_formContainer__au2IZ {
   display: flex;
   flex: 1 1 auto;
@@ -313,7 +384,7 @@ textarea{
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  margin-bottom: 24px;
+
   width: 100%;
 }
 
@@ -323,9 +394,7 @@ h3.typography_h3__AkmD7 {
   line-height: 32px;
 }
 
-.signin_textFieldsContainer__WIXUm {
-  margin-bottom: 16px;
-}
+
 
 
 
@@ -433,7 +502,7 @@ p.form-field label,
   padding: 0;
 }
 
-input,
+
 textarea,
 select,
 p.form-field label,
@@ -442,7 +511,7 @@ p.form-field label,
   font-feature-settings: 'ss03' on, 'ss01' on;
 }
 
-input[type='text'],
+
 form.form textarea,
 form.form select {
   display: flex;
@@ -458,7 +527,7 @@ form.form select {
   color: #0e101a;
 }
 
-input,
+
 textarea,
 select,
 p.form-field label,
@@ -473,154 +542,50 @@ p.form-field label,
 
 
 
-.rf-input--large {
-    display: block;
-    width: 100%;
-}
+
 .gutter-top {
     margin-top: 20px;
 }
-.rf-input {
-    display: inline-block;
-    vertical-align: bottom;
-}
-.rf-input__inner {
-    box-shadow: 0 4px 15px transparent;
-    display: flex;
-    transition: box-shadow .2s ease-in-out;
-    border-radius: 3px;
-}
-.flight-search__panel__fieldset--date .rf-input__wrapper {
-    flex: 0 0 50%;
-    max-width: 50%;
-    min-width: 0;
-}
-.flight-search__panel__fieldset--date .rf-input__wrapper {
-    -webkit-box-flex: 0;
-    flex: 0 0 50%;
-    max-width: 50%;
-    min-width: 0;
-}
-.rf-input__wrapper {
-    display: block;
-    flex: 1 0 100px;
-    max-width: 100%;
-    position: relative;
-    vertical-align: middle;
-}
 
-.base_basic__8rArQ {
-    align-items: center;
-    border-radius: 6px;
-    display: flex;
-    height: 48px;
-    justify-content: center;
-    padding:0;
-    position: relative;
-    margin: none;
-    width: 90%;
 
-}
+
+
 
 .base_text__vPnqO {
     font-size: 14px;
     font-weight: 700;
     line-height: 32px;
+    font-family: Inter, Helvetica, Arial, sans-serif;
 }
 .btn_color_verde {
     background: #0d8065;
     color: #fff;
+    align-items: left;
+    border-radius: 6px;
+    border-width: 1px;
+    height: 48px;
+    justify-content: left;
+    padding:0;
+    margin: none;
+    width: 90%;
 }
 
 .btn_color_rojo {
     background: #dc3545;
     color: #fff;
+    align-items: center;
+    border-radius: 6px;
+    border-width: 1px;
+    height: 48px;
+    justify-content: center;
+    padding:0;
+    margin: none;
+    width: 90%;
 }
 
-.top-100 {
-  top: 100%;
-}
-
-.bottom-100 {
-  bottom: 100%;
-}
 
 .max-h-select {
   max-height: 300px;
 }
 
 </style>
-
-
-        
-        
-
-
-        <!-- <div class="signin_textFieldsContainer__WIXUm">
-          <div class>
-            <div class="mb-4">
-              
-              <p class="form-field  Form_saleshelp pd-select required required-custom    form-field-primary">
-                <label class="field-label" for="idSelector">Buscar Usuario: *</label>
-                <select name="idSelector" id="idSelector" class="select touched" v-model="form.title" onchange="" required="">
-                  <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
-                </select>
-              </p>
-
-              
-              <p class="form-field add-text-before email pd-text required required-custom    ">
-                <label class="field-label" for="id_agenda">Link:</label>
-                <input v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="text touched" size="30" maxlength="255" onchange="" onfocus="" required="">
-              </p>
-
-              <p>
-                <label class="field-label" >Nota:</label>
-                <textarea name="message" rows="3" cols="40"></textarea>
-              </p>
-              
-
-              
-              <div class="rf-input--large gutter-top rf-input">
-                <div class="rf-input__inner">
-                  <div class="rf-input__wrapper arrival-input">
-                    <label class="field-label" for="id_agenda">Desde:</label>
-                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
-                  </div>
-                  <div class="rf-input__wrapper return-date-input">
-                    <label class="field-label" for="id_agenda">Hasta:</label>
-                    <vue-timepicker close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
-                  </div>
-                </div>
-              </div>
-
-              <div class="rf-input--large gutter-top rf-input">
-                <div class="rf-input__inner">
-                  <div class="rf-input__wrapper arrival-input">
-                    <label class="field-label" for="id_agenda">Fecha:</label>
-                    <input type="text" name="id_agenda" v-model="fFechaDeProgramacion" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
-                  </div>
-                  <div class="rf-input__wrapper return-date-input">
-                    <label class="field-label" for="id_agenda">Duración:</label>
-                    <input type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
-                  </div>
-                </div>
-              </div>
-
-
-            </div>
-
-
-          </div>
-        </div> -->
-
-
-          <!-- <div class="rf-input--large gutter-top rf-input">
-            <div class="rf-input__inner">
-              <div class="rf-input__wrapper arrival-input">
-                <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
-              </div>
-              <div class="rf-input__wrapper return-date-input">
-                <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="base_basic__8rArQ btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
-              </div>
-            </div>
-          </div> -->
