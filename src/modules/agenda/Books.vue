@@ -4,11 +4,11 @@
             <div class="_2H35C-container">
                 
                 <Suspense>
-                    <Calendar @dateClick="dateClick"></Calendar>
+                    <Calendar @dateClick="dateClick" @editarPadre="escucharHijo"></Calendar>
                 </Suspense>
             </div>
             <div class="_2H35C-container">
-                <CalendarModal v-if="showModal" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></CalendarModal>    
+                <CalendarModal v-if="showModal" :item="itemVar" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></CalendarModal>    
             </div>
 
     </div>
@@ -35,7 +35,8 @@ export default{
                 user_id: " ",
                 session: 1800,
             },
-            fechaProgramar:''
+            fechaProgramar:'',
+            itemVar:{},
         }
     },
     methods: {
@@ -77,6 +78,11 @@ export default{
             const mes = fechaOriginal.getMonth() + 1;
             const anio = fechaOriginal.getFullYear();
             return `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
+        },
+        escucharHijo(valor){
+            console.log("escucharhijo",valor);
+            this.$data.showModal = true;
+            this.itemVar=valor
         },
         saveAppt(param){
             console.log("param")

@@ -1,19 +1,16 @@
 <template>
     <div>
       <Fullcalendar ref="fullCalendar" :options="calendarOptions">
-        <template v-slot:eventContent='arg'>
-          <b>{{ arg.event.title }}</b>
-          <div>
-            <button>
-              <i class="fa-solid fa-pen-to-square" style="color: #73777b;"></i>
-              Click me
-            </button>
+        
+        <template v-slot:eventContent='arg' >
+          <div class="column-container" >
+            <b>{{ arg.event.title }}</b>
+            <div>
+              <CalendarModal3 :expanded="showModal" @editarModal="editarModal" @closeModal="closeModal"></CalendarModal3>
+            </div>
           </div>
         </template>
       </Fullcalendar>
-      <Dialogs v-model="showModal">
-        <CalendarModal2 v-if="showModal" :event="selectedEvent" @close="closeModal" />
-      </Dialogs>
     </div>
   </template>
   
@@ -25,8 +22,9 @@
   import listPlugin from '@fullcalendar/list'
   import interactionPlugin from '@fullcalendar/interaction'
   import esLocale from "@fullcalendar/core/locales/es";
-  import CalendarModal2 from "@/modules/agenda/components/CalendarModal2.vue";
-  import { Dialogs } from 'v-dialogs'
+  //import CalendarModal2 from "@/modules/agenda/components/CalendarModal2.vue";
+  import CalendarModal3 from "@/modules/agenda/components/CalendarModal3.vue";
+  //import { Dialogs } from 'v-dialogs'
   import { mapActions, mapState ,mapGetters,mapMutations} from 'vuex'
 //import { ref } from 'vue';
 
@@ -34,8 +32,9 @@ export default {
     name: 'calendario-dos',
     components: {
         Fullcalendar,
-        CalendarModal2,
-        Dialogs
+        //CalendarModal2,
+        CalendarModal3,
+        //Dialogs
     },
 
     data() {
@@ -62,12 +61,13 @@ export default {
                   console.log(info)
                   const cal = info.event;
                   console.log("cal",cal)
-                  console.log("cal",cal.start)
+                  this.selectedItem = cal;
+                  /* console.log("cal",cal.start)
                   console.log("cal",cal.title)
                   console.log("cal",cal.end)
                   console.log("cal",cal.extendedProps.link)
                   console.log("cal",cal.extendedProps.description)
-                  console.log("cal",cal.backgroundColor)
+                  console.log("cal",cal.backgroundColor) */
 
                   /* var clickX = info.jsEvent.pageX;
                   var clickY = info.jsEvent.pageY;
@@ -77,7 +77,7 @@ export default {
                   var modalY = clickY + 20; // ajuste el número 20 a la distancia que desee del clic
                   
                   // abre el modal en la posición calculada */
-                  this.showModal = true;
+                  //this.showModal = !this.showModal;
                 },
                 eventAdd: (info) => {
                   console.log('create')
@@ -91,6 +91,7 @@ export default {
                 //eventContent: eventContent
             };
             var showModal = false;
+            var selectedItem = {};
             //eventsData: this.getentriesTest()
       return {
       calendarOptions,
@@ -115,15 +116,28 @@ export default {
         setearInicio(value){
           return value;
         },
-        openModal() {
+        editarModal() {
+          this.$emit('editarPadre', this.selectedItem);
+          console.log("editarModal")
           this.showModal = true;
         },
         closeModal() {
-          this.showModal = false
+          console.log("closeModal")
+
+          this.showModal = false;
+        },
+        recortarTexto(texto) {
+        if (texto.length > 30) {
+          return texto.substring(0, 30);
         }
+        return texto;
+      }
     },
     computed: {
         ...mapState( 'programacionModule', ['isLoading']),
+        /* textoRecortado() {
+        return recortarTexto(this.textoOriginal);
+      } */
     },
     async created() {
       
@@ -144,7 +158,10 @@ export default {
 </script>
 
 <style scoped>
-
+.column-container {
+  display: flex;
+  flex-direction: column;
+}
 </style>
 
   

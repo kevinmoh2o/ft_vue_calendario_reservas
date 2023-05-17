@@ -69,29 +69,35 @@ import { mapMutations} from 'vuex'
 export default {
   name: "modal-calendar",
   props: {
-    fechaProgramar:String,
-
+  fechaProgramar: {
+    type: String,
+    required: true
   },
+  item: {
+    type: Object,
+    required: true,
+    default: () => ({
+      title: "",
+      link: "",
+      horaIni: {},
+      horaFin: {},
+      fechaIni: "",
+      fechaFin: "",
+      backgroundColor: "",
+      userid: "",
+      extendedProps: {
+        description: ""
+      }
+    })
+  }
+},
   mounted: async function() {
 
   },
   data() {
     
     return {
-      form: {
-        title: "",
-        link: "",
-        horaIni: {},
-        horaFin: {},
-        fechaIni:'',
-        fechaFin:'',
-        backgroundColor:"",
-        userid: "",
-        extendedProps:{
-          description: "",
-        }
-
-      },
+      form: this.item,
       date: null,
       fFechaDeProgramacion:this.fechaProgramar,
       nombres: [

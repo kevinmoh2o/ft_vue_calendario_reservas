@@ -4,6 +4,7 @@
     <router-link to="/agenda/books/list">About</router-link>
     <router-link to="/holas"> modal1 </router-link>
     <router-link to="/modal2"> modal2 </router-link>
+    <router-link to="/modal3"> modal3 </router-link>
   </nav>
   <router-view/>
 </template>

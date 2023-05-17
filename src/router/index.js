@@ -36,6 +36,12 @@ const routes = [{
         name: 'modal2',
         component: () =>
             import ( /* webpackChunkName: "about" */ '@/modules/agenda/components/CalendarModal2.vue')
+    }    ,
+    {
+        path: '/modal3',
+        name: 'modal3',
+        component: () =>
+            import ( /* webpackChunkName: "about" */ '@/modules/agenda/components/CalendarModal3.vue')
     }
 ]
 
