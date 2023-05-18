@@ -8,7 +8,10 @@
                 </Suspense>
             </div>
             <div class="_2H35C-container">
-                <CalendarModal v-if="showModal" :item="itemVar" :forma="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" :fechaProgramar="fechaProgramar"></CalendarModal>    
+                <CalendarModal v-if="showModal" 
+                :estadoModalOpt="estadoModalOptPa" :item="itemVar" :forma="newEvent" :fechaProgramar="fechaProgramar"
+                @closeModal="closeModal" @saveAppt="saveAppt" @editarModal="editarModal"
+                ></CalendarModal>    
             </div>
 
     </div>
@@ -28,6 +31,7 @@ export default{
     data() {
         return {
             showModal: false,
+            estadoModalOptPa:false,
             newEvent: {
                 title: " ",
                 date_at: " ",
@@ -41,10 +45,12 @@ export default{
     },
     methods: {
         
-        dateClick(arg) {
+        dateClick(arg1,arg2) {
             this.showModal = true;
-            console.log('Recibiendo datos: ', arg);
-            const {date} = arg;
+            console.log('Recibiendo datos arg1: ', arg1);
+            console.log('Recibiendo datos arg2: ', arg2);
+            const {date} = arg1;
+            this.estadoModalOptPa=arg2;
 
             this.fechaProgramar=Formatos.soloFechaDMY(date);
         },
@@ -89,6 +95,11 @@ export default{
             console.log("param")
             console.log({param})
             this.$data.showModal = false;
+        },
+        editarModal(){
+            
+            this.estadoModalOptPa=true;
+            console.log("editarModalPa",this.estadoModalOptPa);
         }
     },
 };

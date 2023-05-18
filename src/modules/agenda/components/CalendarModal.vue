@@ -1,27 +1,40 @@
 <template>
 
       <form class="cal-grcontainer">
+        <div  class="botones">
+            <button v-if="statusButton" class="btn mx-1 resaltadoVerde " @click.prevent="store(form)" >
+                <i class="fa-solid fa-floppy-disk fa-xm" style="color: #73777b;"></i>
+            </button>
+            <button v-else class="btn mx-1 resaltadoYellow " @click.prevent="$emit('editarModal')" >
+                <i class="fa-solid fa-pen-to-square fa-xm" style="color: #73777b;"></i>
+            </button>
+            <button v-if="!statusButton" class="btn mx-1 resaltadoRojo" @click.prevent="$emit('eliminar',expandir)">
+                <i class="fa-solid fa-trash fa-xm" style="color: #73777b;"></i>
+            </button>
+            <button class="btn mx-1 resaltado" @click.prevent="$emit('closeModal',expandir)">
+                <i class="fa-solid fa-xmark fa-xm" style="color: #73777b;"></i>
+            </button>
+        </div>
 
         <div class="titulo">
           <h1 class="typography_h3__AkmD7" style="color: rgb(14, 16, 26);">Agendar una cita</h1>
         </div>
 
         <div class="automatico">
+          <br>
           <label><strong>Licenciado a cargo:</strong></label><label class="lblClass"> Carlos Perez</label><br>
           <label><strong>Fecha de cita:</strong></label><label class="lblClass"> 01/06/2023</label><br>
           <label><strong>Duracion:</strong></label><label class="lblClass"> 1h 20min</label><br>
-         
-          
-
-
           <hr>
         </div>
 
         <div class="selecpatient">
-          <select class="entradaStyle" name="idSelector" id="idSelector" v-model="form.title" onchange="" required="true">
+          <select v-if="statusButton" class="entradaStyle" name="idSelector" id="idSelector" v-model="form.title" onchange="" required="true">
             <option value="" selected>Selecciona un paciente</option>
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
+          <!-- <input v-else v-model="form.title" type="text" name="paciente" class="entradaStyle" size="30" disabled="disabled"> -->
+          <label v-else class="lblOculto">{{form.title +'Carlos Perez'}}</label>
         </div>
 
         <!-- <div class="fecha">
@@ -33,8 +46,9 @@
         </div> -->
 
         <div class="horaini">
-          <vue-timepicker style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
-          
+          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
+          <!-- <input v-else v-model="form.horaIni.HH" type="text" name="hora" class="entradaStyle" size="30" disabled="false"> -->
+          <label v-else class="lblOculto">{{form.horaIni.HH +'Carlos Perez'}}</label>
         </div>
 
         <!-- <div class="horafin">
@@ -42,19 +56,21 @@
         </div> -->
 
         <div class="link">
-          <input  placeholder="Link ..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
+          <input v-if="statusButton" placeholder="Link ..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
+          <label v-else class="lblOculto">{{form.link +'Carlos Perez'}}</label>
         </div>
 
         <div class="nota">
-          <textarea placeholder="Nota ..." name="message" v-model="form.extendedProps.description"></textarea>
+          <textarea v-if="statusButton" placeholder="Nota ..." name="message" v-model="form.extendedProps.description"></textarea>
+          <label v-else class="lblOculto">{{form.extendedProps.description +'Carlos Perez'}}</label>
         </div>
 
-        <div class="boton1">
+        <!-- <div class="boton1">
           <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
         </div>
         <div class="boton2">
           <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
-        </div>
+        </div> -->
       </form>
 </template>
   
@@ -73,19 +89,11 @@ export default {
     type: String,
     required: true
   },
-  itemVar:{
-      title: "",
-      link: "",
-      horaIni: {},
-      horaFin: {},
-      fechaIni: "",
-      fechaFin: "",
-      backgroundColor: "",
-      userid: "",
-      extendedProps: {
-        description: ""
-      }
-    }
+  estadoModalOpt:{
+    type: Boolean,
+    required: true
+  }
+  
  
 },
   mounted: async function() {
@@ -94,7 +102,19 @@ export default {
   data() {
     
     return {
-      form: this.itemVar,
+        form: {
+        title: "",
+        link: "",
+        horaIni: {},
+        horaFin: {},
+        fechaIni: "",
+        fechaFin: "",
+        backgroundColor: "",
+        userid: "",
+        extendedProps: {
+          description: ""
+        }
+      },
       date: null,
       fFechaDeProgramacion:this.fechaProgramar,
       nombres: [
@@ -103,7 +123,8 @@ export default {
         { id: 3, nombre: 'Pedro' }
       ],
       format: 'hh:mm',
-      indicadorTotalTime:""
+      indicadorTotalTime:"",
+      statusButton:this.estadoModalOpt
     }
   },
   components: {
@@ -203,14 +224,12 @@ export default {
   },
 
   watch:{
-    /* form: {
-      handler: function(newForm, oldForm) {
-        console.log("newForm",newForm);
-        console.log("oldForm",oldForm);
-      },
-      deep: true
-    } */
-  }
+    estadoModalOpt: function (newStatus, oldStatus) {
+        console.log("Watcher estadoModalOpt - Nuevo valor: ", newStatus);
+        console.log("Watcher estadoModalOpt - Valor anterior: ", oldStatus);
+        this.statusButton = newStatus;
+      }
+    }
 };
 </script>
   
@@ -228,6 +247,18 @@ label{
 }
 
 
+.lblOculto {
+  border-radius: 5px;
+
+  border: 1.5px solid #746f6f;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 
 input{
   width: 100%;
@@ -242,6 +273,29 @@ input::placeholder {
   font-size: 14px; /* Cambiar el tamaño de letra a 16 píxeles */
 }
 
+.botones{
+    height: 40px;
+   /*  background-color: blue; */
+    grid-area: botones;
+    align-items: end;
+    align-content: end;
+    text-align: right;
+    padding-top: 5px;
+    font-size: 18px;
+}
+
+
+.resaltado {
+  border-radius: 50%;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.resaltado:hover {
+  opacity: 0.5;
+  background-color: #73777b71;
+}
+
 .titulo{
   grid-area:titulo;
   font-family:  Inter, Helvetica, Arial, sans-serif;
@@ -253,6 +307,7 @@ input::placeholder {
   text-align: left;
   margin-left: 10px;
   margin-right: 10px;
+  align-content: center;
 }
 
 
@@ -262,6 +317,10 @@ input::placeholder {
   text-align: right;
   margin-left: 10px;
   margin-right: 10px;
+  height: 40px;
+  display: flex;
+  
+
 }
 .fecha{
   /* padding: 4.8px; */
@@ -278,6 +337,8 @@ input::placeholder {
   grid-area:link;
   margin-left: 10px;
   margin-right: 10px;
+  height: 40px;
+  display: flex;
 }
 
 .horaini{
@@ -346,8 +407,8 @@ textarea{
   display: grid;
   width: 360px;
   grid-template: 
-        "titulo titulo"50px
-        "automatico automatico"200px
+        "titulo botones"50px
+        "automatico automatico"100px
         "selecpatient selecpatient"50px
         "horaini horaini"50px
         "link link"50px
@@ -361,7 +422,7 @@ textarea{
     .cal-grcontainer{
       width: 682px;
         grid-template:
-        "titulo titulo" 50px
+        "titulo botones" 50px
         "automatico automatico" 90px
         "selecpatient horaini" 50px
         "link link" 50px 
@@ -369,6 +430,47 @@ textarea{
         "boton1 boton2" 60px /
         320px 320px;
     }
+}
+
+.resaltadoVerde {
+  border-radius: 50%;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.resaltadoVerde:hover {
+  opacity: 0.9;
+  background-color: #6ee30fe7;
+  color: #fff;
+}
+
+.resaltadoYellow {
+  border-radius: 50%;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.resaltadoYellow:hover {
+  opacity: 0.9;
+  background-color: #e9fc12;
+  color: #fff;
+}
+
+
+.resaltadoRojo {
+  border-radius: 50%;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.resaltadoRojo:hover {
+  opacity: 0.9;
+  background-color: #cb1a1de8;
+  color: #ffd207;
+}
+
+.resaltadoRojo:hover i {
+  color: #ffffff;
 }
 
 .entradaStyle{
@@ -393,8 +495,12 @@ textarea{
 
 .typography_h3__AkmD7,
 h3.typography_h3__AkmD7 {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 19px;
+  text-align: start;
+  padding-left: 10px;
+  align-content: center;
+  margin: 0;
+  /* line-height: 32px; */
 }
 
 

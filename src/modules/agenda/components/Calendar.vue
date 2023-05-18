@@ -56,30 +56,7 @@ export default {
                 events: [],
                 dateClick: this.handleDateclick,
                 eventChange:this.eventChangeClick,
-                eventClick: (info) => {
-                  console.log('select')
-                  console.log(info)
-                  const cal = info.event;
-                  
-                  this.selectedItem = cal;
-                  console.log("cal",this.selectedItem)
-                  /* console.log("cal",cal.start)
-                  console.log("cal",cal.title)
-                  console.log("cal",cal.end)
-                  console.log("cal",cal.extendedProps.link)
-                  console.log("cal",cal.extendedProps.description)
-                  console.log("cal",cal.backgroundColor) */
-
-                  /* var clickX = info.jsEvent.pageX;
-                  var clickY = info.jsEvent.pageY;
-                  
-                  // calcula la posición del modal
-                  var modalX = clickX + 20; // ajuste el número 20 a la distancia que desee del clic
-                  var modalY = clickY + 20; // ajuste el número 20 a la distancia que desee del clic
-                  
-                  // abre el modal en la posición calculada */
-                  //this.showModal = !this.showModal;
-                },
+                eventClick: this.handleEventClick,
                 eventAdd: (info) => {
                   console.log('create')
                   console.log(info)
@@ -101,8 +78,34 @@ export default {
       }
     },
     methods: {
+      handleEventClick(info) {
+        console.log('selected')
+        console.log(info)
+        const cal = info.event;
+        
+        this.selectedItem = cal;
+        console.log("cal",this.selectedItem)
+        this.$emit('dateClick', info,false)
+
+        /* console.log("cal",cal.start)
+        console.log("cal",cal.title)
+        console.log("cal",cal.end)
+        console.log("cal",cal.extendedProps.link)
+        console.log("cal",cal.extendedProps.description)
+        console.log("cal",cal.backgroundColor) */
+
+        /* var clickX = info.jsEvent.pageX;
+        var clickY = info.jsEvent.pageY;
+        
+        // calcula la posición del modal
+        var modalX = clickX + 20; // ajuste el número 20 a la distancia que desee del clic
+        var modalY = clickY + 20; // ajuste el número 20 a la distancia que desee del clic
+        
+        // abre el modal en la posición calculada */
+        //this.showModal = !this.showModal;
+      },
         handleDateclick(clickInfo) {
-            this.$emit('dateClick', clickInfo)
+            this.$emit('dateClick', clickInfo,true)
             console.log("dateClick")
         },
         eventChangeClick(arg){
