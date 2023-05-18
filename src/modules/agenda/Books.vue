@@ -42,7 +42,7 @@ export default{
     methods: {
         
         dateClick(arg) {
-            this.$data.showModal = true;
+            this.showModal = true;
             console.log('Recibiendo datos: ', arg);
             const {date} = arg;
 
@@ -70,7 +70,8 @@ export default{
             //console.log(await counterStore.deleteDocument('sexo',"OKPvmXuEB0hPNeyoudR0"));
         },
         closeModal() {
-            this.$data.showModal = false;
+            console.log("calendar closeModal")
+            this.showModal = false;
         },
         recortarFecha(fecha){
             const fechaOriginal = new Date(fecha);

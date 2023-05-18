@@ -6,7 +6,7 @@
           <div class="column-container" >
             <b>{{ arg.event.title }}</b>
             <div>
-              <CalendarModal3 :expanded="showModal" @editarModal="editarModal" @closeModal="closeModal"></CalendarModal3>
+              <CalendarModal3  @editarModal="editarModal" @closeModal="closeModal"></CalendarModal3>
             </div>
           </div>
         </template>
@@ -60,8 +60,9 @@ export default {
                   console.log('select')
                   console.log(info)
                   const cal = info.event;
-                  console.log("cal",cal)
+                  
                   this.selectedItem = cal;
+                  console.log("cal",this.selectedItem)
                   /* console.log("cal",cal.start)
                   console.log("cal",cal.title)
                   console.log("cal",cal.end)
@@ -95,7 +96,8 @@ export default {
             //eventsData: this.getentriesTest()
       return {
       calendarOptions,
-      showModal
+      showModal,
+      selectedItem
       }
     },
     methods: {

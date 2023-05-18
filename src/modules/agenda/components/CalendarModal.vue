@@ -73,10 +73,7 @@ export default {
     type: String,
     required: true
   },
-  item: {
-    type: Object,
-    required: true,
-    default: () => ({
+  itemVar:{
       title: "",
       link: "",
       horaIni: {},
@@ -88,8 +85,8 @@ export default {
       extendedProps: {
         description: ""
       }
-    })
-  }
+    }
+ 
 },
   mounted: async function() {
 
@@ -97,7 +94,7 @@ export default {
   data() {
     
     return {
-      form: this.item,
+      form: this.itemVar,
       date: null,
       fFechaDeProgramacion:this.fechaProgramar,
       nombres: [

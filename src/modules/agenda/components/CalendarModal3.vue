@@ -5,7 +5,7 @@
 
    
         <div  class="botones">
-            <button class="btn mx-1 resaltado " @click.prevent="$emit('editarModal',expandir)" >
+            <button class="btn mx-1 resaltado " @click.prevent="$emit('editarModal')" >
                 <i class="fa-solid fa-pen-to-square fa-xs" style="color: #73777b;"></i>
             </button>
             <button class="btn mx-1 resaltado" @click.prevent="$emit('eliminar',expandir)">
@@ -56,7 +56,7 @@ export default {
     props:{
         expanded: {
             type: Boolean,
-            default: true
+            default: false
         }
     },
     components: {
