@@ -9,7 +9,8 @@
             </div>
             <div class="_2H35C-container">
                 <CalendarModal v-if="showModal" 
-                :estadoModalOpt="estadoModalOptPa" :item="itemVar" :forma="newEvent" :fechaProgramar="fechaProgramar"
+                :fechaProgramar="fechaProgramar" :estadoModalOpt="estadoModalOptPa" :item="itemVar" :forma="newEvent"
+                :nombreOpt="nombreOpt" :selectedOpt="itemVar"
                 @closeModal="closeModal" @saveAppt="saveAppt" @editarModal="editarModal"
                 ></CalendarModal>    
             </div>
@@ -32,6 +33,8 @@ export default{
         return {
             showModal: false,
             estadoModalOptPa:false,
+            fechaProgramar:'',
+            itemVar:{},
             newEvent: {
                 title: " ",
                 date_at: " ",
@@ -39,8 +42,13 @@ export default{
                 user_id: " ",
                 session: 1800,
             },
-            fechaProgramar:'',
-            itemVar:{},
+            nombreOpt: [
+                { id: 1, nombre: 'Juan' },
+                { id: 2, nombre: 'Maria' },
+                { id: 3, nombre: 'Pedro' }
+            ]
+            
+            
         }
     },
     methods: {
@@ -50,6 +58,41 @@ export default{
             console.log('Recibiendo datos arg1: ', arg1);
             console.log('Recibiendo datos arg2: ', arg2);
             const {date} = arg1;
+            this.itemVar=arg1.event
+            this.fechaProgramar=arg1.dateStr
+            if(this.itemVar==null){
+                this.itemVar={
+                backgroundColor: "",
+                borderColor: "",
+                end: "",
+                extendedProps: {
+                    description: ""
+                },
+                link: "",
+                start: "",
+                title: "",
+                userid: "pelar",
+                encargado:"Pedro Laredo Chuquispuma",
+                id:""
+            };
+            }
+            
+            /* this.itemVar={
+                backgroundColor: "#3484F0",
+                borderColor: "#C4DBFA",
+                end: "2023-05-10T09:10:00",
+                extendedProps: {
+                    description: "El paciente Juan Pérez se presenta hoy a la consulta con quejas de dolor abdominal persistente en el área del abdomen inferior derecho. El dolor comenzó hace aproximadamente dos días y ha ido empeorando gradualmente. No se observan síntomas adicionales como fiebre, náuseas o vómitos."
+                },
+                link: "https://7-h98mb4b3d2sbt1-applicationdevelopment.lcnc.cfapps.eu10.hana.ondemand.com/lobby",
+                start: "2023-05-10T08:10:00",
+                title: "Juan",
+                userid: "kbmont",
+                encargado:"Carlos Sipan Seminario",
+                id:"asdasd"
+            }; */
+
+            
             this.estadoModalOptPa=arg2;
 
             this.fechaProgramar=Formatos.soloFechaDMY(date);

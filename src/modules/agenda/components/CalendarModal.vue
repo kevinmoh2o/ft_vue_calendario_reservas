@@ -2,17 +2,17 @@
 
       <form class="cal-grcontainer">
         <div  class="botones">
-            <button v-if="statusButton" class="btn mx-1 resaltadoVerde " @click.prevent="store(form)" >
-                <i class="fa-solid fa-floppy-disk fa-xm" style="color: #73777b;"></i>
+            <button v-if="statusButton" class="btn resaltadoVerde " @click.prevent="store(form)" data-toggle="tooltip" title="Guardar">
+                <i class="fa-solid fa-floppy-disk istore"></i>
             </button>
-            <button v-else class="btn mx-1 resaltadoYellow " @click.prevent="$emit('editarModal')" >
-                <i class="fa-solid fa-pen-to-square fa-xm" style="color: #73777b;"></i>
+            <button v-else class="btn resaltadoYellow " @click.prevent="$emit('editarModal')" data-toggle="tooltip" title="Editar">
+                <i class="fa-solid fa-pen-to-square ieditar"></i>
             </button>
-            <button v-if="!statusButton" class="btn mx-1 resaltadoRojo" @click.prevent="$emit('eliminar',expandir)">
-                <i class="fa-solid fa-trash fa-xm" style="color: #73777b;"></i>
+            <button v-if="!statusButton" class="btn resaltadoRojo" @click.prevent="$emit('eliminar',expandir)" data-toggle="tooltip" title="Eliminar">
+                <i class="fa-solid fa-trash ieliminar"></i>
             </button>
-            <button class="btn mx-1 resaltado" @click.prevent="$emit('closeModal',expandir)">
-                <i class="fa-solid fa-xmark fa-xm" style="color: #73777b;"></i>
+            <button class="btn resaltado" @click.prevent="$emit('closeModal',expandir)" data-toggle="tooltip" title="Cerrar">
+                <i class="fa-solid fa-xmark iclose"></i>
             </button>
         </div>
 
@@ -22,9 +22,9 @@
 
         <div class="automatico">
           <br>
-          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass"> Carlos Perez</label><br>
-          <label><strong>Fecha de cita:</strong></label><label class="lblClass"> 01/06/2023</label><br>
-          <label><strong>Duracion:</strong></label><label class="lblClass"> 1h 20min</label><br>
+          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass">{{ acortarTexto(form.encargado,15) }}</label><br>
+          <label><strong>Fecha de cita:</strong></label><label class="lblClass"> {{getFechaCab}}</label><br>
+          <label><strong>Duracion:</strong></label><label class="lblClass"> 1 hora</label><br>
           <hr>
         </div>
 
@@ -34,7 +34,7 @@
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
           <!-- <input v-else v-model="form.title" type="text" name="paciente" class="entradaStyle" size="30" disabled="disabled"> -->
-          <label v-else class="lblOculto">{{form.title +'Carlos Perez'}}</label>
+          <label v-else class="lblOculto">{{form.title}}</label>
         </div>
 
         <!-- <div class="fecha">
@@ -46,9 +46,9 @@
         </div> -->
 
         <div class="horaini">
-          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaIni" v-on:change="changeIniHour"></vue-timepicker>
+          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour" v-model="horaInicioDa"></vue-timepicker>
           <!-- <input v-else v-model="form.horaIni.HH" type="text" name="hora" class="entradaStyle" size="30" disabled="false"> -->
-          <label v-else class="lblOculto">{{form.horaIni.HH +'Carlos Perez'}}</label>
+          <label v-else class="lblOculto">{{getHoraMin}}</label>
         </div>
 
         <!-- <div class="horafin">
@@ -57,12 +57,12 @@
 
         <div class="link">
           <input v-if="statusButton" placeholder="Link ..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
-          <label v-else class="lblOculto">{{form.link +'Carlos Perez'}}</label>
+          <label v-else class="lblOculto">{{getLinkCab}}</label>
         </div>
 
         <div class="nota">
           <textarea v-if="statusButton" placeholder="Nota ..." name="message" v-model="form.extendedProps.description"></textarea>
-          <label v-else class="lblOculto">{{form.extendedProps.description +'Carlos Perez'}}</label>
+          <label v-else class="lblOculto">{{getCommCab }}</label>
         </div>
 
         <!-- <div class="boton1">
@@ -92,7 +92,14 @@ export default {
   estadoModalOpt:{
     type: Boolean,
     required: true
+  },
+  nombreOpt:{
+    type: Array,
+  },
+  selectedOpt:{
+    type: Object
   }
+
   
  
 },
@@ -102,26 +109,13 @@ export default {
   data() {
     
     return {
-        form: {
-        title: "",
-        link: "",
-        horaIni: {},
-        horaFin: {},
-        fechaIni: "",
-        fechaFin: "",
-        backgroundColor: "",
-        userid: "",
-        extendedProps: {
-          description: ""
-        }
-      },
-      date: null,
+      form: this.selectedOpt,
+      date:this.fechaProgramar,
+      horaInicioDa:this.getHoraFomString(this.selectedOpt),
+      textoLinkCut:this.acortarTexto(this.selectedOpt.link,35),
+      textoCommeCut:this.acortarTexto(this.selectedOpt.extendedProps.description,150),
       fFechaDeProgramacion:this.fechaProgramar,
-      nombres: [
-        { id: 1, nombre: 'Juan' },
-        { id: 2, nombre: 'Maria' },
-        { id: 3, nombre: 'Pedro' }
-      ],
+      nombres: this.nombreOpt,
       format: 'hh:mm',
       indicadorTotalTime:"",
       statusButton:this.estadoModalOpt
@@ -149,7 +143,7 @@ export default {
           description: form.extendedProps.description
         }
       }
-      console.log(objeto);
+      console.log("objeto POST",objeto);
       var created = await this.createEntry(objeto)
       if(created){
         console.log("created",created);
@@ -165,7 +159,7 @@ export default {
     },
     setTimeView(){
       
-      if(this.form.horaIni.HH && this.form.horaIni.mm){
+      /* if(this.form.horaIni.HH && this.form.horaIni.mm){
         console.log("setTimeView")
         console.log(this.form.horaIni)
         this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.form.horaIni);
@@ -173,7 +167,7 @@ export default {
         this.form.fechaFin = this.sumarleUnaHora(this.form.fechaIni)
         console.log(typeof this.form.fechaIni);
         console.log(typeof this.form.fechaFin);
-      }
+      } */
 
       
       //this.form.fechaFin = this.horaFecha(this.fFechaDeProgramacion,this.form.horaFin);
@@ -199,7 +193,33 @@ export default {
       let fecha = new Date(input);
       fecha.setHours(fecha.getHours() + 1);
       return fecha
+    },
+    getHoraFomString:function (input) {
+      
+      if(input==undefined){
+        const fecha = input.start.split('T')[1];
+        const hora = fecha.split(':');
+        return {HH: hora[0], mm: hora[1]}
+      }else{
+        return ""
+      }
+    },
+    getFechaFomString:function(input){
+      console.log("getFechaFomString",input)
+        const sepa = input.split('-');
+        return `${sepa[2]}/${sepa[1]}/${sepa[0]}`
+
+      
+    },
+    acortarTexto(texto, longitudMaxima) {
+      if (texto.length <= longitudMaxima) {
+        return texto; // El texto no necesita acortarse
+      } else {
+        console.log(texto.substring(0, longitudMaxima) )
+        return texto.substring(0, longitudMaxima) + '...'; // Acortar el texto y agregar puntos suspensivos
+      }
     }
+    
     
   },
   computed: {
@@ -221,6 +241,14 @@ export default {
       }
     },
     
+    getHoraMin() {
+      return `${this.horaInicioDa.HH}:${this.horaInicioDa.mm}`
+    },
+    getFechaCab(){return this.date},
+    getLinkCab (){return this.textoLinkCut},
+    getCommCab (){return this.textoCommeCut},
+    
+    
   },
 
   watch:{
@@ -228,8 +256,19 @@ export default {
         console.log("Watcher estadoModalOpt - Nuevo valor: ", newStatus);
         console.log("Watcher estadoModalOpt - Valor anterior: ", oldStatus);
         this.statusButton = newStatus;
-      }
-    }
+      },
+    horaInicioDa: {
+      handler(nuevaHora) {
+        console.log("nuevaHora",nuevaHora);
+        //this.horaInicioDa = this.getFechaFomString()
+        // Realizar cualquier acción necesaria cuando cambie la horaInicioDa
+        // Aquí puedes agregar código adicional para actualizar otros valores o hacer llamadas a API, etc.
+      },
+      deep: true,
+    },
+    
+  },
+    
 };
 </script>
   
@@ -277,18 +316,20 @@ input::placeholder {
     height: 40px;
    /*  background-color: blue; */
     grid-area: botones;
-    align-items: end;
-    align-content: end;
+    align-items: flex-start;
+    align-content: top;
     text-align: right;
-    padding-top: 5px;
+    /* padding-top: 5px; */
     font-size: 18px;
 }
 
 
 .resaltado {
+  font-size: 22px;
   border-radius: 50%;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
+  background-color: #ebe8e865;
 }
 
 .resaltado:hover {
@@ -432,35 +473,74 @@ textarea{
     }
 }
 
+
+.istore{
+  color: #0f893b;
+}
+
+.istore:hover {
+  color: white;
+}
+
+
+.ieditar{
+  color: #fbc020;
+}
+
+.ieditar:hover {
+  color: white;
+}
+
+.ieliminar{
+  color: #cb1a1de8;
+}
+
+.ieliminar:hover {
+  color: white;
+}
+
+.iclose{
+  color: #73777b;
+}
+
+.iclose:hover {
+  color: white;
+}
 .resaltadoVerde {
+  font-size: 22px;
   border-radius: 50%;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
+  background-color: #ebe8e865;
 }
 
 .resaltadoVerde:hover {
   opacity: 0.9;
-  background-color: #6ee30fe7;
+  background-color: #0f893b;
   color: #fff;
 }
 
 .resaltadoYellow {
+  font-size: 22px;
   border-radius: 50%;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
+  background-color: #ebe8e865;
 }
 
 .resaltadoYellow:hover {
   opacity: 0.9;
-  background-color: #e9fc12;
+  background-color: #fbc020;
   color: #fff;
 }
 
 
 .resaltadoRojo {
+  font-size: 22px;
   border-radius: 50%;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
+  background-color: #ebe8e865;
 }
 
 .resaltadoRojo:hover {
@@ -670,9 +750,9 @@ p.form-field label,
     background: #0d8065;
     color: #fff;
     align-items: left;
-    border-radius: 6px;
+    border-radius: 50px;
     border-width: 1px;
-    height: 48px;
+    height: 60px;
     justify-content: left;
     padding:0;
     margin: none;
@@ -698,3 +778,19 @@ p.form-field label,
 }
 
 </style>
+
+/*
+{
+  title: "",
+  link: "",
+  horaIni: {},
+  horaFin: {},
+  fechaIni: "",
+  fechaFin: "",
+  backgroundColor: "",
+  userid: "",
+  extendedProps: {
+    description: ""
+  }
+}
+*/
