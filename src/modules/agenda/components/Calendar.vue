@@ -87,12 +87,15 @@ export default {
         console.log("cal",this.selectedItem)
         this.$emit('dateClick', info,false)
 
-        /* console.log("cal",cal.start)
-        console.log("cal",cal.title)
-        console.log("cal",cal.end)
-        console.log("cal",cal.extendedProps.link)
-        console.log("cal",cal.extendedProps.description)
-        console.log("cal",cal.backgroundColor) */
+        /* console.log("start",cal.start)
+        console.log("title",cal.title)
+        console.log("end",cal.end)
+        console.log("link",cal.extendedProps.link)
+        console.log("description",cal.extendedProps.description)
+        console.log("description",cal.extendedProps.encargado)
+        console.log("description",cal.extendedProps.userid)
+
+        console.log("backgroundColor",cal.backgroundColor) */
 
         /* var clickX = info.jsEvent.pageX;
         var clickY = info.jsEvent.pageY;

@@ -18,15 +18,9 @@ export const addEntry = (state, entry) => {
   state.entries.push(entry)
 }
 
-//export const setEntries = async ( state  ) =>  {
-//    
-//}
-//
-//export const updateEntry = (/* state */ ) => {
-//
-//}
-//
-//export const addEntry = (/* state */ ) => {
-//    
-//}
-//
+export const deleteEntry = (state, id) => {
+  const index = state.entries.findIndex(entry => entry.id === id);
+  if (index !== -1) {
+    state.entries.splice(index, 1);
+  }
+}

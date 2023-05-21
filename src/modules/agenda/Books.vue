@@ -59,22 +59,24 @@ export default{
             console.log('Recibiendo datos arg2: ', arg2);
             const {date} = arg1;
             this.itemVar=arg1.event
+            console.log('itemVar: ', this.itemVar);
+
             this.fechaProgramar=arg1.dateStr
             if(this.itemVar==null){
                 this.itemVar={
-                backgroundColor: "",
-                borderColor: "",
-                end: "",
-                extendedProps: {
-                    description: ""
-                },
-                link: "",
-                start: "",
-                title: "",
-                userid: "pelar",
-                encargado:"Pedro Laredo Chuquispuma",
-                id:""
-            };
+                    backgroundColor: "#607FF2",
+                    borderColor: "#C4DBFA",
+                    end: "",
+                    extendedProps: {
+                        description: "",
+                        encargado:"Pedro Laredo Chuquispuma",
+                        link: "",
+                        userid: "pelar",
+                    },
+                    start: "",
+                    title: "",
+                    id:""
+                };
             }
             
             /* this.itemVar={

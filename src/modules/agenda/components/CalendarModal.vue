@@ -22,7 +22,7 @@
 
         <div class="automatico">
           <br>
-          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass">{{ acortarTexto(form.encargado,15) }}</label><br>
+          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass">{{ acortarTexto(form.extendedProps.encargado,15) }}</label><br>
           <label><strong>Fecha de cita:</strong></label><label class="lblClass"> {{getFechaCab}}</label><br>
           <label><strong>Duracion:</strong></label><label class="lblClass"> 1 hora</label><br>
           <hr>
@@ -33,7 +33,6 @@
             <option value="" selected>Selecciona un paciente</option>
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
-          <!-- <input v-else v-model="form.title" type="text" name="paciente" class="entradaStyle" size="30" disabled="disabled"> -->
           <label v-else class="lblOculto">{{form.title}}</label>
         </div>
 
@@ -46,7 +45,7 @@
         </div> -->
 
         <div class="horaini">
-          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour" v-model="horaInicioDa"></vue-timepicker>
+          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour" v-model="horaForm"></vue-timepicker>
           <!-- <input v-else v-model="form.horaIni.HH" type="text" name="hora" class="entradaStyle" size="30" disabled="false"> -->
           <label v-else class="lblOculto">{{getHoraMin}}</label>
         </div>
@@ -56,7 +55,7 @@
         </div> -->
 
         <div class="link">
-          <input v-if="statusButton" placeholder="Link ..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
+          <input v-if="statusButton" placeholder="Link ..." v-model="form.extendedProps.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
           <label v-else class="lblOculto">{{getLinkCab}}</label>
         </div>
 
@@ -111,14 +110,15 @@ export default {
     return {
       form: this.selectedOpt,
       date:this.fechaProgramar,
-      horaInicioDa:this.getHoraFomString(this.selectedOpt),
-      textoLinkCut:this.acortarTexto(this.selectedOpt.link,35),
+      //horaInicioDa:this.getHoraFomString(this.selectedOpt),
+      textoLinkCut:this.acortarTexto(this.selectedOpt.extendedProps.link,35),
       textoCommeCut:this.acortarTexto(this.selectedOpt.extendedProps.description,150),
       fFechaDeProgramacion:this.fechaProgramar,
       nombres: this.nombreOpt,
       format: 'hh:mm',
       indicadorTotalTime:"",
-      statusButton:this.estadoModalOpt
+      statusButton:this.estadoModalOpt,
+      horaForm:{}
     }
   },
   components: {
@@ -133,16 +133,18 @@ export default {
       //var ff = Formatos.fechaStrinToObject(form.fechaFin);
       var objeto = {
         title:form.title,
-        link:form.link,
         start:form.fechaIni,
         end:Formatos.fechaZeroToDB(form.fechaFin),
-        userid:form.userid,
-        backgroundColor: "#3788D8",
-        borderColor: "darkred",
+        backgroundColor: "#607FF2",
+        borderColor: "#4C51C6",
         extendedProps:{
-          description: form.extendedProps.description
+          description: form.extendedProps.description,
+          encargado:form.extendedProps.encargado,
+          link:form.extendedProps.link,
+          userid:form.extendedProps.userid,
         }
       }
+      
       console.log("objeto POST",objeto);
       var created = await this.createEntry(objeto)
       if(created){
@@ -159,15 +161,15 @@ export default {
     },
     setTimeView(){
       
-      /* if(this.form.horaIni.HH && this.form.horaIni.mm){
+      if(this.horaForm.HH && this.horaForm.mm){
         console.log("setTimeView")
-        console.log(this.form.horaIni)
-        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.form.horaIni);
+        console.log(this.horaForm)
+        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.horaForm);
         
         this.form.fechaFin = this.sumarleUnaHora(this.form.fechaIni)
         console.log(typeof this.form.fechaIni);
         console.log(typeof this.form.fechaFin);
-      } */
+      }
 
       
       //this.form.fechaFin = this.horaFecha(this.fFechaDeProgramacion,this.form.horaFin);
@@ -196,7 +198,7 @@ export default {
     },
     getHoraFomString:function (input) {
       
-      if(input==undefined){
+      if(input!=undefined){
         const fecha = input.start.split('T')[1];
         const hora = fecha.split(':');
         return {HH: hora[0], mm: hora[1]}
@@ -212,12 +214,19 @@ export default {
       
     },
     acortarTexto(texto, longitudMaxima) {
-      if (texto.length <= longitudMaxima) {
-        return texto; // El texto no necesita acortarse
-      } else {
-        console.log(texto.substring(0, longitudMaxima) )
-        return texto.substring(0, longitudMaxima) + '...'; // Acortar el texto y agregar puntos suspensivos
+      /* console.log("texto",texto)
+      console.log("longitudMaxima",longitudMaxima) */
+      if(texto!=null && longitudMaxima!=null){
+        if (texto.length <= longitudMaxima) {
+          return texto; // El texto no necesita acortarse
+        } else {
+          console.log(texto.substring(0, longitudMaxima) )
+          return texto.substring(0, longitudMaxima) + '...'; // Acortar el texto y agregar puntos suspensivos
+        }
+      }else{
+        return null
       }
+      
     }
     
     
@@ -242,9 +251,19 @@ export default {
     },
     
     getHoraMin() {
-      return `${this.horaInicioDa.HH}:${this.horaInicioDa.mm}`
+      console.log("form",this.form)
+      var horita = this.getHoraFomString();
+      return `${horita.HH}:${horita.mm}`
+      //return `${this.horaInicioDa.HH}:${this.horaInicioDa.mm}`
     },
-    getFechaCab(){return this.date},
+    getFechaCab(){
+      if(this.date!='NaN/NaN/NaN'){
+        return this.date;
+      }else{
+        var strDate = Formatos.fechaZeroToDB(this.selectedOpt.end)
+        return this.getFechaFomString(strDate.substring(0, 10))
+      }
+    },  
     getLinkCab (){return this.textoLinkCut},
     getCommCab (){return this.textoCommeCut},
     

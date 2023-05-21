@@ -21,21 +21,6 @@ export const Formatos = {
 
     fechaZeroToDB(input){
       const fecha = new Date(input);
-      /* const opciones = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-        timeZone: 'America/Lima' // UTC -5
-      };
-      const fechaPeru = fecha.toLocaleString('es-PE', opciones); */
-      /* const fechaPeru = fecha.toLocaleDateString('es-PE', { timeZone: 'America/Lima' });
-      const horaPeru = fecha.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
-      const fechaHoraPeru = fechaPeru + 'T' + horaPeru;
-      console.log(fechaHoraPeru) */
       const horaPeru = fecha.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
       const fechaFormateada = fecha.toISOString().split('T')[0] + 'T' + horaPeru;
       return fechaFormateada;

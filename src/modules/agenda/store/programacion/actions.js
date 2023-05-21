@@ -13,6 +13,7 @@ export const loadEntries = async ({ commit }) => {
             console.log(myObj);
             for (const key in myObj) {
                 const value = myObj[key];
+                value["id"]=key;
                 data.push(value);
             }
             console.log(data);
