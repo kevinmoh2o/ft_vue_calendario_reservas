@@ -5,6 +5,7 @@
     <router-link to="/holas"> modal1 </router-link>
     <router-link to="/modal2"> modal2 </router-link>
     <router-link to="/modal3"> modal3 </router-link>
+    <router-link to="/cargando"> cargando </router-link>
   </nav>
   <router-view/>
 </template>

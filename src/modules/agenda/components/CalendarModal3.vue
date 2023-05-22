@@ -5,15 +5,15 @@
 
    
         <div  class="botones">
-            <button class="btn mx-1 resaltado " @click.prevent="$emit('editarModal')" >
+            <button class="btn mx-1 resaltado " @click.prevent="$emit('editarM3')" >
                 <i class="fa-solid fa-pen-to-square fa-xs" style="color: #73777b;"></i>
             </button>
-            <button class="btn mx-1 resaltado" @click.prevent="$emit('eliminar',expandir)">
+            <button class="btn mx-1 resaltado" @click.prevent="$emit('eliminarM3',expandir)">
                 <i class="fa-solid fa-trash fa-xs" style="color: #73777b;"></i>
             </button>
-            <button class="btn mx-1 resaltado" @click.prevent="$emit('closeModal',expandir)">
+            <!-- <button class="btn mx-1 resaltado" @click.prevent="$emit('closeM3',expandir)">
                 <i class="fa-solid fa-xmark fa-xs" style="color: #73777b;"></i>
-            </button>
+            </button> -->
         </div>
 
 

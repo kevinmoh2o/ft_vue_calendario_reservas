@@ -6,7 +6,8 @@
           <div class="column-container" >
             <b>{{ arg.event.title }}</b>
             <div>
-              <CalendarModal3  @editarModal="editarModal" @closeModal="closeModal"></CalendarModal3>
+              <CalendarModal3  @editarModal="editarModal" @closeModal="closeModal"
+              @eliminarM3="eliminarM3"></CalendarModal3>
             </div>
           </div>
         </template>
@@ -139,6 +140,9 @@ export default {
           return texto.substring(0, 30);
         }
         return texto;
+      },
+      eliminarM3(){
+        console.log("eliminarM3")
       }
     },
     computed: {

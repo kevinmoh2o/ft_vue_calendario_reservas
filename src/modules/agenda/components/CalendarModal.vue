@@ -8,7 +8,7 @@
             <button v-else class="btn resaltadoYellow " @click.prevent="$emit('editarModal')" data-toggle="tooltip" title="Editar">
                 <i class="fa-solid fa-pen-to-square ieditar"></i>
             </button>
-            <button v-if="!statusButton" class="btn resaltadoRojo" @click.prevent="$emit('eliminar',expandir)" data-toggle="tooltip" title="Eliminar">
+            <button v-if="!statusButton" class="btn resaltadoRojo" @click.prevent="$emit('eliminarM1',form.id)" data-toggle="tooltip" title="Eliminar">
                 <i class="fa-solid fa-trash ieliminar"></i>
             </button>
             <button class="btn resaltado" @click.prevent="$emit('closeModal',expandir)" data-toggle="tooltip" title="Cerrar">
@@ -45,9 +45,9 @@
         </div> -->
 
         <div class="horaini">
-          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour" v-model="horaForm"></vue-timepicker>
-          <!-- <input v-else v-model="form.horaIni.HH" type="text" name="hora" class="entradaStyle" size="30" disabled="false"> -->
-          <label v-else class="lblOculto">{{getHoraMin}}</label>
+          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour"
+          v-model="horaForm"></vue-timepicker>
+          <label v-else class="lblOculto">{{horaForm}}</label>
         </div>
 
         <!-- <div class="horafin">
@@ -118,7 +118,8 @@ export default {
       format: 'hh:mm',
       indicadorTotalTime:"",
       statusButton:this.estadoModalOpt,
-      horaForm:{}
+      horaForm:this.horaOM()
+      //horaForm:this.getHoraFomString(this.selectedOpt.start)
     }
   },
   components: {
@@ -149,7 +150,7 @@ export default {
       var created = await this.createEntry(objeto)
       if(created){
         console.log("created",created);
-        this.addEntry(objeto)
+        //this.addEntry(objeto)
       }
       
     },
@@ -196,14 +197,27 @@ export default {
       fecha.setHours(fecha.getHours() + 1);
       return fecha
     },
+    horaOM(){
+      console.log("this.selectedOpt",this.selectedOpt);
+      if(this.selectedOpt.start){
+        var horaitaOM = this.getHoraFomString(this.selectedOpt.start);
+        console.log("horaitaOM",horaitaOM);
+        this.horaForm = horaitaOM
+        return `${horaitaOM.HH}:${horaitaOM.mm}`
+      }else{
+        return {}
+      }
+      
+    },
     getHoraFomString:function (input) {
       
       if(input!=undefined){
-        const fecha = input.start.split('T')[1];
+        var strDate = Formatos.fechaZeroToDB(input);
+        const fecha = strDate.split('T')[1];
         const hora = fecha.split(':');
         return {HH: hora[0], mm: hora[1]}
       }else{
-        return ""
+        return {}
       }
     },
     getFechaFomString:function(input){
@@ -225,8 +239,10 @@ export default {
         }
       }else{
         return null
-      }
-      
+      } 
+    },
+    eliminarM1(value){
+        console.log("eliminarM1 Modal",value);
     }
     
     
@@ -472,8 +488,7 @@ textarea{
         "selecpatient selecpatient"50px
         "horaini horaini"50px
         "link link"50px
-        "nota nota"110px
-        "boton1 boton2"60px/
+        "nota nota"110px/
         160px 160px
         ;
 }
@@ -483,11 +498,10 @@ textarea{
       width: 682px;
         grid-template:
         "titulo botones" 50px
-        "automatico automatico" 90px
+        "automatico automatico" 95px
         "selecpatient horaini" 50px
         "link link" 50px 
-        "nota nota" 110px
-        "boton1 boton2" 60px /
+        "nota nota" 110px/
         320px 320px;
     }
 }

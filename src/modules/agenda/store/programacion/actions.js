@@ -36,25 +36,10 @@ export const loadEntries = async ({ commit }) => {
   export const createEntry = async ({ commit }, entry) => {
     try {
       const newEntry = await investigacionApi.post(`/resultados.json`,entry);
-      /*
-        {
-          "data": {
-              "name": "-NVQCoJ0LLmglGWhnx10"
-          },
-          "status": 200,
-          "statusText": "OK",
-        
-              "baseURL": "https://luna-covid-efwqev.firebaseio.com",
-              "method": "post",
-              "url": "/resultados.json",
-              "data": "{\"title\":\"Maria\",\"link\":\"asdkñlas asdlñaksdk aslñdñlaksd asdlñasñlda sdñlkasñldklñaskd asd alskdñ{laskdñlaskdlñ\",\"start\":\"2023-05-19T14:00:00\",\"end\":\"2023-05-19T15:00:00\",\"userid\":\"\",\"backgroundColor\":\"#3788D8\",\"borderColor\":\"darkred\"}"
-          },
-          "request": {}
-        }
-      */
      if(newEntry.status === 200){
-      console.log(newEntry)
-      commit('addEntry', newEntry)
+      entry["id"]=newEntry.data.name;
+      console.log("CREATE newEntry",newEntry,entry)
+      commit('addEntry', entry)
       return {entry,stausCode:200};
      }else{
       return null;
@@ -65,6 +50,20 @@ export const loadEntries = async ({ commit }) => {
     }
   }
 
-
+  export const deleteEntry = async ({ commit }, id) => {
+    try {
+      var rpta = await investigacionApi.delete(`/resultados/${id}.json`);
+      console.log("deleteEntry",rpta)
+      if(rpta.status==200){
+        commit('deleteEntry', id);
+        return { id, statusCode: 200 };
+      }else{
+        console.log(id)
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
 
   

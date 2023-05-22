@@ -42,6 +42,12 @@ const routes = [{
         name: 'modal3',
         component: () =>
             import ( /* webpackChunkName: "about" */ '@/modules/agenda/components/CalendarModal3.vue')
+    },
+    {
+        path: '/cargando',
+        name: 'cargando-template',
+        component: () =>
+            import ( /* webpackChunkName: "about" */ '@/modules/agenda/components/Cargando.vue')
     }
 ]
 

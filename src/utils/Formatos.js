@@ -20,24 +20,13 @@ export const Formatos = {
     },
 
     fechaZeroToDB(input){
+      console.log("fechaZeroToDB",input)
       const fecha = new Date(input);
       const horaPeru = fecha.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
       const fechaFormateada = fecha.toISOString().split('T')[0] + 'T' + horaPeru;
       return fechaFormateada;
     },
     
-    // Formato para números como moneda
-    moneda: function(valor, simbolo, decimales) {
-      const simboloMoneda = simbolo || "$";
-      const decimalesMostrar = decimales !== undefined ? decimales : 2;
-      const valorNumerico = parseFloat(valor);
-      
-      if (isNaN(valorNumerico)) {
-        return "";
-      }
-      
-      return simboloMoneda + valorNumerico.toFixed(decimalesMostrar).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-    },
     
  
   };

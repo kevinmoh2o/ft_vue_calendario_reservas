@@ -11,7 +11,7 @@
                 <CalendarModal v-if="showModal" 
                 :fechaProgramar="fechaProgramar" :estadoModalOpt="estadoModalOptPa" :item="itemVar" :forma="newEvent"
                 :nombreOpt="nombreOpt" :selectedOpt="itemVar"
-                @closeModal="closeModal" @saveAppt="saveAppt" @editarModal="editarModal"
+                @closeModal="closeModal" @saveAppt="saveAppt" @editarModal="editarModal" @eliminarM1="eliminarM1"
                 ></CalendarModal>    
             </div>
 
@@ -21,6 +21,7 @@
 <script>
 import { defineAsyncComponent } from 'vue'
 import { Formatos } from '@/utils/Formatos.js';
+import { mapActions } from 'vuex'
 
 export default{
     name: 'book-list',
@@ -52,7 +53,7 @@ export default{
         }
     },
     methods: {
-        
+        ...mapActions('programacionModule', ['deleteEntry']),     
         dateClick(arg1,arg2) {
             this.showModal = true;
             console.log('Recibiendo datos arg1: ', arg1);
@@ -145,7 +146,14 @@ export default{
             
             this.estadoModalOptPa=true;
             console.log("editarModalPa",this.estadoModalOptPa);
+        },
+        async eliminarM1(value){
+            console.log("eliminarM1 Books",value);
+            await this.deleteEntry(value)
+            //this.createEntry(objeto)
         }
+        
+        
     },
 };
 /* options.events=getEvents.value;

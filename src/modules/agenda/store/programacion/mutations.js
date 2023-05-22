@@ -15,11 +15,13 @@ export const updateEntry = (state, entry) => {
 }
 
 export const addEntry = (state, entry) => {
+  console.log("Mutacion addEntry",state, entry)
   state.entries.push(entry)
 }
 
 export const deleteEntry = (state, id) => {
   const index = state.entries.findIndex(entry => entry.id === id);
+  console.log("index DELETE",index);
   if (index !== -1) {
     state.entries.splice(index, 1);
   }
