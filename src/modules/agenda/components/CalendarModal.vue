@@ -8,7 +8,7 @@
             <button v-else class="btn resaltadoYellow " @click.prevent="$emit('editarModal')" data-toggle="tooltip" title="Editar">
                 <i class="fa-solid fa-pen-to-square ieditar"></i>
             </button>
-            <button v-if="!statusButton" class="btn resaltadoRojo" @click.prevent="$emit('eliminarM1',form.id)" data-toggle="tooltip" title="Eliminar">
+            <button v-if="!statusButton" class="btn resaltadoRojo" @click.prevent="$emit('eliminar',expandir)" data-toggle="tooltip" title="Eliminar">
                 <i class="fa-solid fa-trash ieliminar"></i>
             </button>
             <button class="btn resaltado" @click.prevent="$emit('closeModal',expandir)" data-toggle="tooltip" title="Cerrar">
@@ -22,7 +22,7 @@
 
         <div class="automatico">
           <br>
-          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass">{{ acortarTexto(form.extendedProps.encargado,15) }}</label><br>
+          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass">{{ acortarTexto(form.encargado,15) }}</label><br>
           <label><strong>Fecha de cita:</strong></label><label class="lblClass"> {{getFechaCab}}</label><br>
           <label><strong>Duracion:</strong></label><label class="lblClass"> 1 hora</label><br>
           <hr>
@@ -33,6 +33,7 @@
             <option value="" selected>Selecciona un paciente</option>
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
+          <!-- <input v-else v-model="form.title" type="text" name="paciente" class="entradaStyle" size="30" disabled="disabled"> -->
           <label v-else class="lblOculto">{{form.title}}</label>
         </div>
 
@@ -45,9 +46,9 @@
         </div> -->
 
         <div class="horaini">
-          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour"
-          v-model="horaForm"></vue-timepicker>
-          <label v-else class="lblOculto">{{horaForm}}</label>
+          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour" v-model="horaInicioDa"></vue-timepicker>
+          <!-- <input v-else v-model="form.horaIni.HH" type="text" name="hora" class="entradaStyle" size="30" disabled="false"> -->
+          <label v-else class="lblOculto">{{getHoraMin}}</label>
         </div>
 
         <!-- <div class="horafin">
@@ -55,7 +56,7 @@
         </div> -->
 
         <div class="link">
-          <input v-if="statusButton" placeholder="Link ..." v-model="form.extendedProps.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
+          <input v-if="statusButton" placeholder="Link ..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
           <label v-else class="lblOculto">{{getLinkCab}}</label>
         </div>
 
@@ -75,7 +76,6 @@
   
 <script>
 import VueTimepicker from 'vue3-timepicker';
-import moment from 'moment';
 import { Formatos } from '@/utils/Formatos.js';
 import { mapActions} from 'vuex'
 import { mapMutations} from 'vuex'
@@ -110,16 +110,14 @@ export default {
     return {
       form: this.selectedOpt,
       date:this.fechaProgramar,
-      //horaInicioDa:this.getHoraFomString(this.selectedOpt),
-      textoLinkCut:this.acortarTexto(this.selectedOpt.extendedProps.link,35),
+      horaInicioDa:this.getHoraFomString(this.selectedOpt),
+      textoLinkCut:this.acortarTexto(this.selectedOpt.link,35),
       textoCommeCut:this.acortarTexto(this.selectedOpt.extendedProps.description,150),
       fFechaDeProgramacion:this.fechaProgramar,
       nombres: this.nombreOpt,
       format: 'hh:mm',
       indicadorTotalTime:"",
-      statusButton:this.estadoModalOpt,
-      horaForm:this.horaOM()
-      //horaForm:this.getHoraFomString(this.selectedOpt.start)
+      statusButton:this.estadoModalOpt
     }
   },
   components: {
@@ -134,23 +132,21 @@ export default {
       //var ff = Formatos.fechaStrinToObject(form.fechaFin);
       var objeto = {
         title:form.title,
+        link:form.link,
         start:form.fechaIni,
         end:Formatos.fechaZeroToDB(form.fechaFin),
-        backgroundColor: "#607FF2",
-        borderColor: "#4C51C6",
+        userid:form.userid,
+        backgroundColor: "#3788D8",
+        borderColor: "darkred",
         extendedProps:{
-          description: form.extendedProps.description,
-          encargado:form.extendedProps.encargado,
-          link:form.extendedProps.link,
-          userid:form.extendedProps.userid,
+          description: form.extendedProps.description
         }
       }
-      
       console.log("objeto POST",objeto);
       var created = await this.createEntry(objeto)
       if(created){
         console.log("created",created);
-        //this.addEntry(objeto)
+        this.addEntry(objeto)
       }
       
     },
@@ -162,15 +158,15 @@ export default {
     },
     setTimeView(){
       
-      if(this.horaForm.HH && this.horaForm.mm){
+      /* if(this.form.horaIni.HH && this.form.horaIni.mm){
         console.log("setTimeView")
-        console.log(this.horaForm)
-        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.horaForm);
+        console.log(this.form.horaIni)
+        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.form.horaIni);
         
         this.form.fechaFin = this.sumarleUnaHora(this.form.fechaIni)
         console.log(typeof this.form.fechaIni);
         console.log(typeof this.form.fechaFin);
-      }
+      } */
 
       
       //this.form.fechaFin = this.horaFecha(this.fFechaDeProgramacion,this.form.horaFin);
@@ -197,27 +193,14 @@ export default {
       fecha.setHours(fecha.getHours() + 1);
       return fecha
     },
-    horaOM(){
-      console.log("this.selectedOpt",this.selectedOpt);
-      if(this.selectedOpt.start){
-        var horaitaOM = this.getHoraFomString(this.selectedOpt.start);
-        console.log("horaitaOM",horaitaOM);
-        this.horaForm = horaitaOM
-        return `${horaitaOM.HH}:${horaitaOM.mm}`
-      }else{
-        return {}
-      }
-      
-    },
     getHoraFomString:function (input) {
       
-      if(input!=undefined){
-        var strDate = Formatos.fechaZeroToDB(input);
-        const fecha = strDate.split('T')[1];
+      if(input==undefined){
+        const fecha = input.start.split('T')[1];
         const hora = fecha.split(':');
         return {HH: hora[0], mm: hora[1]}
       }else{
-        return {}
+        return ""
       }
     },
     getFechaFomString:function(input){
@@ -228,62 +211,28 @@ export default {
       
     },
     acortarTexto(texto, longitudMaxima) {
-      /* console.log("texto",texto)
-      console.log("longitudMaxima",longitudMaxima) */
-      if(texto!=null && longitudMaxima!=null){
-        if (texto.length <= longitudMaxima) {
-          return texto; // El texto no necesita acortarse
-        } else {
-          console.log(texto.substring(0, longitudMaxima) )
-          return texto.substring(0, longitudMaxima) + '...'; // Acortar el texto y agregar puntos suspensivos
-        }
+      console.log("texto",texto)
+      console.log("longitudMaxima",longitudMaxima)
+      if(texto){
+          if (texto.length <= longitudMaxima) {
+            return texto; // El texto no necesita acortarse
+          } else {
+            console.log(texto.substring(0, longitudMaxima) )
+            return texto.substring(0, longitudMaxima) + '...'; // Acortar el texto y agregar puntos suspensivos
+          }
       }else{
-        return null
-      } 
-    },
-    eliminarM1(value){
-        console.log("eliminarM1 Modal",value);
+        return ""
+      }
+      
     }
     
     
   },
-  computed: {
-    diferencia() {
-      const inicio = moment(this.form.fechaIni, 'YYYY-MM-DD HH:mm:ss');
-      const fin = moment(this.form.fechaFin, 'YYYY-MM-DD HH:mm:ss');
-      const diff = moment.duration(fin.diff(inicio));
-      var minutos = diff._milliseconds/60000;
-      if(minutos>=0  ){
-        return {
-          estado: true,
-          minutos: diff._milliseconds/60000
-        };
-      }else{
-        return {
-          estado: false,
-          minutos:0
-        }
-      }
-    },
-    
-    getHoraMin() {
-      console.log("form",this.form)
-      var horita = this.getHoraFomString();
-      return `${horita.HH}:${horita.mm}`
-      //return `${this.horaInicioDa.HH}:${this.horaInicioDa.mm}`
-    },
-    getFechaCab(){
-      if(this.date!='NaN/NaN/NaN'){
-        return this.date;
-      }else{
-        var strDate = Formatos.fechaZeroToDB(this.selectedOpt.end)
-        return this.getFechaFomString(strDate.substring(0, 10))
-      }
-    },  
+  computed: {    
+    getHoraMin() {return `${this.horaInicioDa.HH}:${this.horaInicioDa.mm}`},
+    getFechaCab(){return this.date},
     getLinkCab (){return this.textoLinkCut},
     getCommCab (){return this.textoCommeCut},
-    
-    
   },
 
   watch:{
@@ -488,7 +437,8 @@ textarea{
         "selecpatient selecpatient"50px
         "horaini horaini"50px
         "link link"50px
-        "nota nota"110px/
+        "nota nota"110px
+        "boton1 boton2"60px/
         160px 160px
         ;
 }
@@ -498,10 +448,11 @@ textarea{
       width: 682px;
         grid-template:
         "titulo botones" 50px
-        "automatico automatico" 95px
+        "automatico automatico" 90px
         "selecpatient horaini" 50px
         "link link" 50px 
-        "nota nota" 110px/
+        "nota nota" 110px
+        "boton1 boton2" 60px /
         320px 320px;
     }
 }

@@ -3,7 +3,7 @@
     <div class="generalLoading">
         <div  class="containerLoad">
             <div class="imgCl">
-                <img class="imgComponent" src="@/assets/loading.gif" alt="Loading" />
+                <img class="imgComponent" src="@/assets/loading2.gif" alt="Loading" />
             </div>
             <label class="labelCl" >Cargando...</label>
         </div>
@@ -75,8 +75,11 @@ export default {
     height: 200px;
 }
 .labelCl{
+    padding-top: 20px;
     grid-area:labelCl;
     font-size: 15px;
+    display: inline-block;
+    animation: wave 2s infinite;
 
 }
 
@@ -118,4 +121,10 @@ export default {
   }
 }
 
+
+@keyframes wave {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.09); }
+  100% { transform: scale(1); }
+}
 </style>
