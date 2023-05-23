@@ -1,6 +1,6 @@
 <template>
     <div>
-
+        <div v-if="getEstado()">
             <div class="_2H35C-container">
                 
                 <Suspense>
@@ -14,6 +14,10 @@
                 @closeModal="closeModal" @saveAppt="saveAppt" @editarModal="editarModal" @eliminarM1="eliminarM1"
                 ></CalendarModal>    
             </div>
+        </div>
+        <Cargando v-else></Cargando>
+        
+            
 
     </div>
 </template>
@@ -21,13 +25,14 @@
 <script>
 import { defineAsyncComponent } from 'vue'
 import { Formatos } from '@/utils/Formatos.js';
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 
 export default{
     name: 'book-list',
     components: {
         Calendar: defineAsyncComponent(() => import('./components/Calendar.vue')),
         CalendarModal: defineAsyncComponent(() => import('./components/CalendarModal.vue')),
+        Cargando: defineAsyncComponent(() => import('./components/Cargando.vue')),
 
     },
     data() {
@@ -53,17 +58,14 @@ export default{
         }
     },
     methods: {
-        ...mapActions('programacionModule', ['deleteEntry']),     
+        ...mapActions('programacionModule', ['deleteEntry','setIsLoading']),
+        ...mapGetters('programacionModule', ['getEstado']),
         dateClick(arg1,arg2) {
             this.showModal = true;
             console.log('Recibiendo datos arg1: ', arg1);
             console.log('Recibiendo datos arg2: ', arg2);
-            const {date} = arg1;
-            this.itemVar=arg1.event
-            console.log('itemVar: ', this.itemVar);
-
-            this.fechaProgramar=arg1.dateStr
-            if(this.itemVar==null){
+            if(arg2){
+                console.log("Crear nuevo programa")
                 this.itemVar={
                     backgroundColor: "#607FF2",
                     borderColor: "#C4DBFA",
@@ -78,7 +80,20 @@ export default{
                     title: "",
                     id:""
                 };
+            }else{
+                console.log("EDITAR programa")
+                this.itemVar=arg1.event
             }
+            const {date} = arg1;
+            
+            console.log('itemVar: ', this.itemVar);
+
+            this.fechaProgramar=arg1.dateStr;
+            console.log("this.fechaProgramar",this.fechaProgramar)
+            this.estadoModalOptPa=arg2;
+            this.fechaProgramar=Formatos.soloFechaDMY(date);
+                
+            
             
             /* this.itemVar={
                 backgroundColor: "#3484F0",
@@ -96,9 +111,7 @@ export default{
             }; */
 
             
-            this.estadoModalOptPa=arg2;
-
-            this.fechaProgramar=Formatos.soloFechaDMY(date);
+            
         },
         async registrarUser() {
             
@@ -148,13 +161,21 @@ export default{
             console.log("editarModalPa",this.estadoModalOptPa);
         },
         async eliminarM1(value){
+            this.setIsLoading(false);
             console.log("eliminarM1 Books",value);
             await this.deleteEntry(value)
+            this.setIsLoading(true);
             //this.createEntry(objeto)
         }
         
         
     },
+    computed:{
+        estadoCargando(){
+            console.log("setIsLoading",this.setIsLoading())
+            return this.setIsLoading()
+        }
+    }
 };
 /* options.events=getEvents.value;
 watch(getEvents,()=>{

@@ -5,7 +5,7 @@
         <template v-slot:eventContent='arg' >
           <div class="column-container" >
             <b>{{ arg.event.title }}</b>
-            <div>
+            <div> 
               <CalendarModal3  @editarModal="editarModal" @closeModal="closeModal"
               @eliminarM3="eliminarM3"></CalendarModal3>
             </div>
@@ -53,6 +53,7 @@ export default {
                 editable: true,
                 selectable: true,
                 weekends: true,
+                themeSystem: 'bootstrap5',
                 slotMinTime: "08:00:00",
                 events: [],
                 dateClick: this.handleDateclick,
@@ -170,6 +171,7 @@ export default {
 </script>
 
 <style scoped>
+
 .column-container {
   display: flex;
   flex-direction: column;

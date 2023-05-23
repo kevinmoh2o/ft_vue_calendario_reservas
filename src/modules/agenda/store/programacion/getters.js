@@ -7,6 +7,11 @@ export const getEvents = ( state ) => {
     return state.entries
 }
 
+export const getEstado = ( state ) => {
+   /*  console.log("state setIsLoading",state.isLoading) */
+    return state.isLoading
+}
+
 // id
 export const getEntryById = ( state ) => ( id = '' ) => {
 

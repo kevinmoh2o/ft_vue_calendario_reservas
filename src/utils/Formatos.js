@@ -20,7 +20,7 @@ export const Formatos = {
     },
 
     fechaZeroToDB(input){
-      console.log("fechaZeroToDB",input)
+      /* console.log("fechaZeroToDB",input) */
       const fecha = new Date(input);
       const horaPeru = fecha.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
       const fechaFormateada = fecha.toISOString().split('T')[0] + 'T' + horaPeru;

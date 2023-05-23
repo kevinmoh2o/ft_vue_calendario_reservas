@@ -6,7 +6,7 @@
 
 export const setEntries = (state, entries) => {
   state.entries = entries
-  state.isLoading = false
+  
 }
 
 export const updateEntry = (state, entry) => {
@@ -21,8 +21,14 @@ export const addEntry = (state, entry) => {
 
 export const deleteEntry = (state, id) => {
   const index = state.entries.findIndex(entry => entry.id === id);
-  console.log("index DELETE",index);
+  /* console.log("index DELETE",index); */
   if (index !== -1) {
     state.entries.splice(index, 1);
   }
+}
+
+export const setIsLoading = (state, valor) => {
+  /* console.log("state setIsLoading",state)
+  console.log("valor setIsLoading",valor) */
+  state.isLoading = valor
 }

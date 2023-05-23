@@ -8,7 +8,7 @@
             <button v-else class="btn resaltadoYellow " @click.prevent="$emit('editarModal')" data-toggle="tooltip" title="Editar">
                 <i class="fa-solid fa-pen-to-square ieditar"></i>
             </button>
-            <button v-if="!statusButton" class="btn resaltadoRojo" @click.prevent="$emit('eliminar',expandir)" data-toggle="tooltip" title="Eliminar">
+            <button v-if="!statusButton" class="btn resaltadoRojo" @click.prevent="$emit('eliminarM1',form.id)" data-toggle="tooltip" title="Eliminar">
                 <i class="fa-solid fa-trash ieliminar"></i>
             </button>
             <button class="btn resaltado" @click.prevent="$emit('closeModal',expandir)" data-toggle="tooltip" title="Cerrar">
@@ -22,8 +22,8 @@
 
         <div class="automatico">
           <br>
-          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass">{{ acortarTexto(form.encargado,15) }}</label><br>
-          <label><strong>Fecha de cita:</strong></label><label class="lblClass"> {{getFechaCab}}</label><br>
+          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass">{{ acortarTexto(selectedOpt.extendedProps.encargado,15) }}</label><br>
+          <label><strong>Fecha de cita:</strong></label><label class="lblClass"> {{getFechaCab()}}</label><br>
           <label><strong>Duracion:</strong></label><label class="lblClass"> 1 hora</label><br>
           <hr>
         </div>
@@ -46,9 +46,10 @@
         </div> -->
 
         <div class="horaini">
-          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour" v-model="horaInicioDa"></vue-timepicker>
+          <vue-timepicker v-if="statusButton" style="border: none;" input-width="300px" input-height="50px" drop-direction="auto" placeholder="Desde HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10"  v-on:change="changeIniHour" 
+          v-model="horaInicioDa"></vue-timepicker>
           <!-- <input v-else v-model="form.horaIni.HH" type="text" name="hora" class="entradaStyle" size="30" disabled="false"> -->
-          <label v-else class="lblOculto">{{getHoraMin}}</label>
+          <label v-else class="lblOculto">{{getHoraFomString(selectedOpt.start)}}</label>
         </div>
 
         <!-- <div class="horafin">
@@ -56,8 +57,8 @@
         </div> -->
 
         <div class="link">
-          <input v-if="statusButton" placeholder="Link ..." v-model="form.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
-          <label v-else class="lblOculto">{{getLinkCab}}</label>
+          <input v-if="statusButton" placeholder="Link ..." v-model="form.extendedProps.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
+          <label v-else class="lblOculto">{{acortarTexto(form.extendedProps.link,40)}}</label>
         </div>
 
         <div class="nota">
@@ -65,20 +66,13 @@
           <label v-else class="lblOculto">{{getCommCab }}</label>
         </div>
 
-        <!-- <div class="boton1">
-          <button @click.prevent="store(form)" type="submit" data-qa="btnLogin" class="btn_color_verde"><span class="base_text__vPnqO">Guardar</span></button>
-        </div>
-        <div class="boton2">
-          <button @click.prevent="$emit('closeModal')" type="submit" data-qa="btnLogin" class="btn_color_rojo"><span class="base_text__vPnqO">Cancelar</span></button>
-        </div> -->
       </form>
 </template>
   
 <script>
 import VueTimepicker from 'vue3-timepicker';
 import { Formatos } from '@/utils/Formatos.js';
-import { mapActions} from 'vuex'
-import { mapMutations} from 'vuex'
+import { mapActions,mapGetters} from 'vuex'
 
 
 export default {
@@ -110,7 +104,7 @@ export default {
     return {
       form: this.selectedOpt,
       date:this.fechaProgramar,
-      horaInicioDa:this.getHoraFomString(this.selectedOpt),
+      horaInicioDa:{},
       textoLinkCut:this.acortarTexto(this.selectedOpt.link,35),
       textoCommeCut:this.acortarTexto(this.selectedOpt.extendedProps.description,150),
       fFechaDeProgramacion:this.fechaProgramar,
@@ -124,31 +118,34 @@ export default {
     VueTimepicker
   },
   methods: {
-    ...mapActions('programacionModule', ['createEntry']),
-    ...mapMutations('programacionModule', ['addEntry']),
+    ...mapActions('programacionModule', ['createEntry','setIsLoading']),
+    ...mapGetters('programacionModule', ['getEstado']),
     async store(form) {
+      this.setIsLoading(false);
       this.$emit('saveAppt', form);
-      //var fi = Formatos.fechaStrinToObject(form.fechaIni);
-      //var ff = Formatos.fechaStrinToObject(form.fechaFin);
+      console.log("getEstado Ini",this.getEstado()); 
       var objeto = {
         title:form.title,
-        link:form.link,
         start:form.fechaIni,
         end:Formatos.fechaZeroToDB(form.fechaFin),
         userid:form.userid,
         backgroundColor: "#3788D8",
         borderColor: "darkred",
         extendedProps:{
-          description: form.extendedProps.description
+          description: form.extendedProps.description,
+          encargado:form.extendedProps.encargado,
+          link:form.extendedProps.link,
+          userid:form.extendedProps.userid,
         }
       }
       console.log("objeto POST",objeto);
       var created = await this.createEntry(objeto)
       if(created){
         console.log("created",created);
-        this.addEntry(objeto)
+        //this.addEntry(objeto)
       }
-      
+      this.setIsLoading(true);
+      console.log("getEstado Fin",this.getEstado()); 
     },
     changeIniHour: function() {
       this.setTimeView();
@@ -158,15 +155,15 @@ export default {
     },
     setTimeView(){
       
-      /* if(this.form.horaIni.HH && this.form.horaIni.mm){
-        console.log("setTimeView")
-        console.log(this.form.horaIni)
-        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.form.horaIni);
+      if(this.horaInicioDa.HH && this.horaInicioDa.mm){
+        /* console.log("setTimeView") */
+        console.log(this.horaInicioDa)
+        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.horaInicioDa);
         
         this.form.fechaFin = this.sumarleUnaHora(this.form.fechaIni)
         console.log(typeof this.form.fechaIni);
         console.log(typeof this.form.fechaFin);
-      } */
+      }
 
       
       //this.form.fechaFin = this.horaFecha(this.fFechaDeProgramacion,this.form.horaFin);
@@ -194,25 +191,26 @@ export default {
       return fecha
     },
     getHoraFomString:function (input) {
-      
-      if(input==undefined){
-        const fecha = input.start.split('T')[1];
+      /* console.log("hora inicio: ",input) */
+      if(input!=undefined){
+        var fechaStr = Formatos.fechaZeroToDB(input);
+        const fecha = fechaStr.split('T')[1];
         const hora = fecha.split(':');
-        return {HH: hora[0], mm: hora[1]}
+        this.horaInicioDa={HH: hora[0], mm: hora[1]};
+        /* console.log("this.horaInicioDa: ",this.horaInicioDa) */
+        return `${hora[0]}:${hora[1]}`
       }else{
-        return ""
+        return {}
       }
     },
     getFechaFomString:function(input){
-      console.log("getFechaFomString",input)
+      /* console.log("getFechaFomString",input) */
         const sepa = input.split('-');
         return `${sepa[2]}/${sepa[1]}/${sepa[0]}`
-
-      
     },
     acortarTexto(texto, longitudMaxima) {
-      console.log("texto",texto)
-      console.log("longitudMaxima",longitudMaxima)
+      /* console.log("texto",texto)
+      console.log("longitudMaxima",longitudMaxima) */
       if(texto){
           if (texto.length <= longitudMaxima) {
             return texto; // El texto no necesita acortarse
@@ -224,13 +222,22 @@ export default {
         return ""
       }
       
+    },
+    getFechaCab(){
+      /* console.log("this.date",this.date) */
+      if(this.date!=="NaN/NaN/NaN"){
+        return this.date
+      }else{
+        var fechaStr = Formatos.fechaZeroToDB(this.selectedOpt.start);
+        return this.getFechaFomString(fechaStr.substring(0,10))
+      }
     }
     
     
   },
   computed: {    
     getHoraMin() {return `${this.horaInicioDa.HH}:${this.horaInicioDa.mm}`},
-    getFechaCab(){return this.date},
+    /* getFechaCab(){return this.date?getFechaFomString():this.date}, */
     getLinkCab (){return this.textoLinkCut},
     getCommCab (){return this.textoCommeCut},
   },

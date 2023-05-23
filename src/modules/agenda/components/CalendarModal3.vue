@@ -163,8 +163,8 @@ export default {
 
 .container2 {
   /* Estilos por defecto */
-  box-shadow: -1px 1px 1px 0px rgba(0, 0, 0, 0.25);
-  background-color: #ffffff76;
+  /* box-shadow: -1px 1px 1px 0px rgba(0, 0, 0, 0.25); */
+  /* background-color: #ffffff39; */
   display: grid;
   gap: 0;
   width: 100%;
@@ -178,8 +178,8 @@ export default {
 
 .container2.expanded {
   /* Estilos cuando está expandido */
-  box-shadow: -1px 1px 7px 0px rgba(0, 0, 0, 0.75);
-  background-color: #fff;
+  /* box-shadow: -1px 1px 7px 0px rgba(0, 0, 0, 0.75); */
+  /* background-color: #ffffff39; */
   display: grid;
   gap: 0;
   width: 250px;
