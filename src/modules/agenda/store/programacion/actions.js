@@ -53,7 +53,7 @@ export const loadEntries = async ({ commit }) => {
   export const deleteEntry = async ({ commit }, id) => {
     try {
       var rpta = await investigacionApi.delete(`/resultados/${id}.json`);
-      console.log("deleteEntry",rpta)
+      /* console.log("DELETE por id",rpta) */
       if(rpta.status==200){
         commit('deleteEntry', id);
         return { id, statusCode: 200 };

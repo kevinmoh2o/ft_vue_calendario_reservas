@@ -1,5 +1,5 @@
 <template>
-
+    <div class="containermodal">
       <form class="cal-grcontainer">
         <div  class="botones">
             <button v-if="statusButton" class="btn resaltadoVerde " @click.prevent="store(form)" data-toggle="tooltip" title="Guardar">
@@ -67,6 +67,8 @@
         </div>
 
       </form>
+    </div>
+      
 </template>
   
 <script>
@@ -209,8 +211,8 @@ export default {
         return `${sepa[2]}/${sepa[1]}/${sepa[0]}`
     },
     acortarTexto(texto, longitudMaxima) {
-      /* console.log("texto",texto)
-      console.log("longitudMaxima",longitudMaxima) */
+      console.log("texto",texto)
+      console.log("longitudMaxima",longitudMaxima)
       if(texto){
           if (texto.length <= longitudMaxima) {
             return texto; // El texto no necesita acortarse
@@ -427,6 +429,14 @@ textarea{
   margin-right: 10px;
 }
 
+.containermodal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: transparent;
+  }
 
 .cal-grcontainer {
   border-radius: 8px;
@@ -444,8 +454,7 @@ textarea{
         "selecpatient selecpatient"50px
         "horaini horaini"50px
         "link link"50px
-        "nota nota"110px
-        "boton1 boton2"60px/
+        "nota nota"110px /
         160px 160px
         ;
 }
@@ -455,11 +464,10 @@ textarea{
       width: 682px;
         grid-template:
         "titulo botones" 50px
-        "automatico automatico" 90px
+        "automatico automatico" 100px
         "selecpatient horaini" 50px
         "link link" 50px 
-        "nota nota" 110px
-        "boton1 boton2" 60px /
+        "nota nota" 110px /
         320px 320px;
     }
 }

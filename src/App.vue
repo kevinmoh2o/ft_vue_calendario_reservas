@@ -6,6 +6,8 @@
     <router-link to="/modal2"> modal2 </router-link>
     <router-link to="/modal3"> modal3 </router-link>
     <router-link to="/cargando"> cargando </router-link>
+    <router-link to="/confirmacion"> confirmacion </router-link>
+    
   </nav>
   <router-view/>
 </template>
@@ -17,10 +19,13 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  
 }
 
 nav {
+  /* position: fixed; */
   padding: 30px;
+  overflow: hidden;
 }
 
 nav a {

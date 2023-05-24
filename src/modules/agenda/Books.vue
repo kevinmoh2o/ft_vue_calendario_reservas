@@ -1,13 +1,13 @@
 <template>
-    <div>
+    <div v-if="true">
         <div v-if="getEstado()">
-            <div class="_2H35C-container">
+            <div class="div1">
                 
                 <Suspense>
                     <Calendar @dateClick="dateClick" @editarPadre="escucharHijo"></Calendar>
                 </Suspense>
             </div>
-            <div class="_2H35C-container">
+            <div class="div2">
                 <CalendarModal v-if="showModal" 
                 :fechaProgramar="fechaProgramar" :estadoModalOpt="estadoModalOptPa" :item="itemVar" :forma="newEvent"
                 :nombreOpt="nombreOpt" :selectedOpt="itemVar"
@@ -17,9 +17,15 @@
         </div>
         <Cargando v-else></Cargando>
         
-            
-
     </div>
+    <!-- <Confirmacion v-if="false" ></Confirmacion> -->
+    <confirmacion
+      class="carYesNo"
+      v-if="confirmacionOperation"
+      :message="'¿Desea eliminar la siguiente programación?'"
+      :onConfirm="handleConfirm"
+      :onCancel="handleCancel"
+    ></confirmacion>
 </template>
 
 <script>
@@ -33,10 +39,13 @@ export default{
         Calendar: defineAsyncComponent(() => import('./components/Calendar.vue')),
         CalendarModal: defineAsyncComponent(() => import('./components/CalendarModal.vue')),
         Cargando: defineAsyncComponent(() => import('./components/Cargando.vue')),
+        Confirmacion: defineAsyncComponent(() => import('./components/Confirmacion.vue')),
 
     },
     data() {
         return {
+            eliminatedId:'',
+            confirmacionOperation:false,
             showModal: false,
             estadoModalOptPa:false,
             fechaProgramar:'',
@@ -52,9 +61,7 @@ export default{
                 { id: 1, nombre: 'Juan' },
                 { id: 2, nombre: 'Maria' },
                 { id: 3, nombre: 'Pedro' }
-            ]
-            
-            
+            ] 
         }
     },
     methods: {
@@ -92,32 +99,11 @@ export default{
             console.log("this.fechaProgramar",this.fechaProgramar)
             this.estadoModalOptPa=arg2;
             this.fechaProgramar=Formatos.soloFechaDMY(date);
-                
-            
-            
-            /* this.itemVar={
-                backgroundColor: "#3484F0",
-                borderColor: "#C4DBFA",
-                end: "2023-05-10T09:10:00",
-                extendedProps: {
-                    description: "El paciente Juan Pérez se presenta hoy a la consulta con quejas de dolor abdominal persistente en el área del abdomen inferior derecho. El dolor comenzó hace aproximadamente dos días y ha ido empeorando gradualmente. No se observan síntomas adicionales como fiebre, náuseas o vómitos."
-                },
-                link: "https://7-h98mb4b3d2sbt1-applicationdevelopment.lcnc.cfapps.eu10.hana.ondemand.com/lobby",
-                start: "2023-05-10T08:10:00",
-                title: "Juan",
-                userid: "kbmont",
-                encargado:"Carlos Sipan Seminario",
-                id:"asdasd"
-            }; */
 
-            
-            
         },
         async registrarUser() {
-            
            // var respuesta = await createUserWithEmailAndPassword(auth,'kevsssinmohu@gmail.com',"1234567");
            // console.log("consultando xD",respuesta)
-
         },
         async autenticar() {
             
@@ -160,13 +146,36 @@ export default{
             this.estadoModalOptPa=true;
             console.log("editarModalPa",this.estadoModalOptPa);
         },
-        async eliminarM1(value){
-            this.setIsLoading(false);
+        eliminarM1(value){
+            
             console.log("eliminarM1 Books",value);
-            await this.deleteEntry(value)
-            this.setIsLoading(true);
+            this.eliminatedId=value;
+            this.confirmacionOperation=true;
+
             //this.createEntry(objeto)
-        }
+        },
+        async handleConfirm() {
+        // Lógica para confirmar la acción
+        this.setIsLoading(false);
+        this.confirmacionOperation=false;
+        console.log('Confirmado');
+            try {
+                var rptaDelete = await this.deleteEntry(this.eliminatedId)
+                console.log("DELETE rptaDelete",rptaDelete)
+                if(rptaDelete.statusCode==200){
+                    this.showModal=false
+                }
+            } catch (error) {
+                console.log('error',error);
+            }
+        
+        this.setIsLoading(true);
+        },
+        handleCancel() {
+        // Lógica para cancelar la acción
+        console.log('Cancelado');
+        this.confirmacionOperation=false;
+        },
         
         
     },
@@ -177,14 +186,34 @@ export default{
         }
     }
 };
-/* options.events=getEvents.value;
-watch(getEvents,()=>{
-    options.events=getEvents.value;
-})
- */
+
 </script>
 
 <style scoped>
+
+.div1{
+    z-index: 1;
+    /* position: absolute; */
+    /* background-color:green ; */
+    height: 100%;
+    width: 100%;
+}
+
+.div2{
+    z-index: 2;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+
+.carYesNo{
+    z-index: 2;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
 .py-12 {
   position: relative;
   overflow: visible;
@@ -239,3 +268,18 @@ watch(getEvents,()=>{
     z-index: 2;
     width: 100%;
 }</style>
+
+/* this.itemVar={
+    backgroundColor: "#3484F0",
+    borderColor: "#C4DBFA",
+    end: "2023-05-10T09:10:00",
+    extendedProps: {
+        description: "El paciente Juan Pérez se presenta hoy a la consulta con quejas de dolor abdominal persistente en el área del abdomen inferior derecho. El dolor comenzó hace aproximadamente dos días y ha ido empeorando gradualmente. No se observan síntomas adicionales como fiebre, náuseas o vómitos."
+    },
+    link: "https://7-h98mb4b3d2sbt1-applicationdevelopment.lcnc.cfapps.eu10.hana.ondemand.com/lobby",
+    start: "2023-05-10T08:10:00",
+    title: "Juan",
+    userid: "kbmont",
+    encargado:"Carlos Sipan Seminario",
+    id:"asdasd"
+}; */

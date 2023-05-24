@@ -48,6 +48,12 @@ const routes = [{
         name: 'cargando-template',
         component: () =>
             import ( /* webpackChunkName: "about" */ '@/modules/agenda/components/Cargando.vue')
+    },
+    {
+        path: '/confirmacion',
+        name: 'confirmation-dialog',
+        component: () =>
+            import ( /* webpackChunkName: "about" */ '@/modules/agenda/components/Confirmacion.vue')
     }
 ]
 
