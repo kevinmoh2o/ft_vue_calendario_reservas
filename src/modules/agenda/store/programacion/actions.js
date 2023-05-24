@@ -24,14 +24,20 @@ export const loadEntries = async ({ commit }) => {
           }
 }
 
-    export const updateEntry = async ({ commit }, entry) => {
-        try {
-        const updatedEntry = await investigacionApi.updateEntry(entry)
-        commit('updateEntry', updatedEntry)
-        } catch (error) {
-        console.error(error)
-        }
+export const updateEntry = async ({ commit }, entry) => {
+  try {
+    const updatedEntry = await investigacionApi.put(`/resultados/${entry.id}.json`, entry);
+    if (updatedEntry.status === 200) {
+      commit('updateEntry', entry);
+      console.log("UPDATE updatedEntry", updatedEntry, entry);
+      return { entry, statusCode: 200 };
+    } else {
+      return null;
     }
+  } catch (error) {
+    console.error(error);
+  }
+};
   
   export const createEntry = async ({ commit }, entry) => {
     try {

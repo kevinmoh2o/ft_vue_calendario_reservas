@@ -8,7 +8,7 @@
             <button v-else class="btn resaltadoYellow " @click.prevent="$emit('editarModal')" data-toggle="tooltip" title="Editar">
                 <i class="fa-solid fa-pen-to-square ieditar"></i>
             </button>
-            <button v-if="!statusButton" class="btn resaltadoRojo" @click.prevent="$emit('eliminarM1',form.id)" data-toggle="tooltip" title="Eliminar">
+            <button class="btn resaltadoRojo" @click.prevent="$emit('eliminarM1',form.id)" data-toggle="tooltip" title="Eliminar">
                 <i class="fa-solid fa-trash ieliminar"></i>
             </button>
             <button class="btn resaltado" @click.prevent="$emit('closeModal',expandir)" data-toggle="tooltip" title="Cerrar">
@@ -29,12 +29,12 @@
         </div>
 
         <div class="selecpatient">
-          <select v-if="statusButton" class="entradaStyle" name="idSelector" id="idSelector" v-model="form.title" onchange="" required="true">
+          <select v-if="statusButton && flagUpdateMo" class="entradaStyle" name="idSelector" id="idSelector" v-model="form.title" onchange="" required="true">
             <option value="" selected>Selecciona un paciente</option>
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
           <!-- <input v-else v-model="form.title" type="text" name="paciente" class="entradaStyle" size="30" disabled="disabled"> -->
-          <label v-else class="lblOculto">{{form.title}}</label>
+          <label v-if="!flagUpdateMo" class="lblOculto">{{form.title}}</label>
         </div>
 
         <!-- <div class="fecha">
@@ -93,6 +93,9 @@ export default {
   },
   selectedOpt:{
     type: Object
+  },
+  flagUpdateMo:{
+    type:Boolean
   }
 
   
@@ -116,38 +119,78 @@ export default {
       statusButton:this.estadoModalOpt
     }
   },
+  /* created() {
+    console.log("valores",this.form.title,this.nombreOpt)
+      //this.form.title = this.nombreOpt[0].nombre; // Asigna el primer nombre de la lista como valor inicial
+      this.nombreOpt.forEach((element) => {
+        if(this.form.title===element.nombre){
+          console.log(element);
+        }else{}
+        console.log(element);
+      });
+  }, */
   components: {
     VueTimepicker
   },
   methods: {
-    ...mapActions('programacionModule', ['createEntry','setIsLoading']),
+    ...mapActions('programacionModule', ['createEntry','updateEntry','setIsLoading']),
     ...mapGetters('programacionModule', ['getEstado']),
     async store(form) {
       this.setIsLoading(false);
       this.$emit('saveAppt', form);
-      console.log("getEstado Ini",this.getEstado()); 
-      var objeto = {
-        title:form.title,
-        start:form.fechaIni,
-        end:Formatos.fechaZeroToDB(form.fechaFin),
-        userid:form.userid,
-        backgroundColor: "#3788D8",
-        borderColor: "darkred",
-        extendedProps:{
-          description: form.extendedProps.description,
-          encargado:form.extendedProps.encargado,
-          link:form.extendedProps.link,
-          userid:form.extendedProps.userid,
-        }
+      console.log("this.flagUpdateMo",this.flagUpdateMo)
+      if(this.flagUpdateMo){
+            var objeto = {
+            title:form.title,
+            start:form.fechaIni,
+            end:Formatos.fechaZeroToDB(form.fechaFin),
+            userid:form.userid,
+            backgroundColor: "#3788D8",
+            borderColor: "darkred",
+            extendedProps:{
+              description: form.extendedProps.description,
+              encargado:form.extendedProps.encargado,
+              link:form.extendedProps.link,
+              userid:form.extendedProps.userid,
+            }
+          }
+          try {
+            await this.createEntry(objeto)
+          } catch (error) {
+            console.log("Error en creacion",error);
+          }
+      }else{
+        try {
+          var objetoUp = {
+            id:'',
+            title:form.title,
+            start:form.fechaIni,
+            end:Formatos.fechaZeroToDB(form.fechaFin),
+            userid:form.userid,
+            backgroundColor: "#3788D8",
+            borderColor: "darkred",
+            extendedProps:{
+              description: form.extendedProps.description,
+              encargado:form.extendedProps.encargado,
+              link:form.extendedProps.link,
+              userid:form.extendedProps.userid,
+            }
+          }
+          objetoUp.title=this.form.title;
+          objetoUp.start=this.form.fechaIni;
+          objetoUp.end=Formatos.fechaZeroToDB(this.form.fechaFin);
+          objetoUp.userid=form.userid;
+          objetoUp.backgroundColor= this.form.backgroundColor;
+          objetoUp.borderColor= this.form.borderColor;
+          objetoUp.id=this.form.id
+            await this.updateEntry(objetoUp)
+          } catch (error) {
+            console.log("Error en update",error);
+          }
       }
-      console.log("objeto POST",objeto);
-      var created = await this.createEntry(objeto)
-      if(created){
-        console.log("created",created);
-        //this.addEntry(objeto)
-      }
+      
+
       this.setIsLoading(true);
-      console.log("getEstado Fin",this.getEstado()); 
     },
     changeIniHour: function() {
       this.setTimeView();
@@ -158,13 +201,11 @@ export default {
     setTimeView(){
       
       if(this.horaInicioDa.HH && this.horaInicioDa.mm){
-        /* console.log("setTimeView") */
-        console.log(this.horaInicioDa)
-        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.horaInicioDa);
         
+        console.log(this.horaInicioDa)
+        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.horaInicioDa);        
         this.form.fechaFin = this.sumarleUnaHora(this.form.fechaIni)
-        console.log(typeof this.form.fechaIni);
-        console.log(typeof this.form.fechaFin);
+        console.log("fechaIni", this.form.fechaIni)
       }
 
       
@@ -211,13 +252,12 @@ export default {
         return `${sepa[2]}/${sepa[1]}/${sepa[0]}`
     },
     acortarTexto(texto, longitudMaxima) {
-      console.log("texto",texto)
-      console.log("longitudMaxima",longitudMaxima)
+      /* console.log("texto",texto)
+      console.log("longitudMaxima",longitudMaxima) */
       if(texto){
           if (texto.length <= longitudMaxima) {
             return texto; // El texto no necesita acortarse
           } else {
-            console.log(texto.substring(0, longitudMaxima) )
             return texto.substring(0, longitudMaxima) + '...'; // Acortar el texto y agregar puntos suspensivos
           }
       }else{
@@ -226,12 +266,14 @@ export default {
       
     },
     getFechaCab(){
-      /* console.log("this.date",this.date) */
+      console.log("this.date",this.date,this.selectedOpt,this.fFechaDeProgramacion)
       if(this.date!=="NaN/NaN/NaN"){
         return this.date
       }else{
-        var fechaStr = Formatos.fechaZeroToDB(this.selectedOpt.start);
-        return this.getFechaFomString(fechaStr.substring(0,10))
+        var fechaStr    = Formatos.fechaZeroToDB(this.selectedOpt.start);
+        var fechaString = this.getFechaFomString(fechaStr.substring(0,10));
+        this.fFechaDeProgramacion =fechaString
+        return fechaString
       }
     }
     
@@ -253,6 +295,7 @@ export default {
     horaInicioDa: {
       handler(nuevaHora) {
         console.log("nuevaHora",nuevaHora);
+        this.setTimeView()
         //this.horaInicioDa = this.getFechaFomString()
         // Realizar cualquier acción necesaria cuando cambie la horaInicioDa
         // Aquí puedes agregar código adicional para actualizar otros valores o hacer llamadas a API, etc.
@@ -475,6 +518,7 @@ textarea{
 
 .istore{
   color: #0f893b;
+  font-size: 25px;
 }
 
 .istore:hover {
@@ -506,8 +550,11 @@ textarea{
   color: white;
 }
 .resaltadoVerde {
-  font-size: 22px;
-  border-radius: 50%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 25px;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
   background-color: #ebe8e865;
@@ -778,18 +825,3 @@ p.form-field label,
 
 </style>
 
-/*
-{
-  title: "",
-  link: "",
-  horaIni: {},
-  horaFin: {},
-  fechaIni: "",
-  fechaFin: "",
-  backgroundColor: "",
-  userid: "",
-  extendedProps: {
-    description: ""
-  }
-}
-*/

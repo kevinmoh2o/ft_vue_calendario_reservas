@@ -9,10 +9,16 @@ export const setEntries = (state, entries) => {
   
 }
 
-export const updateEntry = (state, entry) => {
+/* export const updateEntry = (state, entry) => {
   const index = state.entries.findIndex(e => e.id === entry.id)
   state.entries.splice(index, 1, entry)
-}
+} */
+export const updateEntry = (state, entry) => {
+  const index = state.entries.findIndex((e) => e.id === entry.id);
+  if (index !== -1) {
+    state.entries.splice(index, 1, entry);
+  }
+};
 
 export const addEntry = (state, entry) => {
   console.log("Mutacion addEntry",state, entry)

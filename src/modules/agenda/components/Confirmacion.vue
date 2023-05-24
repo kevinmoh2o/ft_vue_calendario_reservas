@@ -24,6 +24,7 @@
     methods: {
       confirm() {
         this.onConfirm();
+        console.log("elimiandr desde adentro")
       },
       cancel() {
         this.onCancel();

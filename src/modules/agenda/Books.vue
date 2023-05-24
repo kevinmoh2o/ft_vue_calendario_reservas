@@ -10,7 +10,7 @@
             <div class="div2">
                 <CalendarModal v-if="showModal" 
                 :fechaProgramar="fechaProgramar" :estadoModalOpt="estadoModalOptPa" :item="itemVar" :forma="newEvent"
-                :nombreOpt="nombreOpt" :selectedOpt="itemVar"
+                :nombreOpt="nombreOpt" :selectedOpt="itemVar" :flagUpdateMo="flagUpdate"
                 @closeModal="closeModal" @saveAppt="saveAppt" @editarModal="editarModal" @eliminarM1="eliminarM1"
                 ></CalendarModal>    
             </div>
@@ -44,6 +44,7 @@ export default{
     },
     data() {
         return {
+            flagUpdate:false,
             eliminatedId:'',
             confirmacionOperation:false,
             showModal: false,
@@ -71,6 +72,7 @@ export default{
             this.showModal = true;
             console.log('Recibiendo datos arg1: ', arg1);
             console.log('Recibiendo datos arg2: ', arg2);
+            this.flagUpdate = true;
             if(arg2){
                 console.log("Crear nuevo programa")
                 this.itemVar={
@@ -90,6 +92,7 @@ export default{
             }else{
                 console.log("EDITAR programa")
                 this.itemVar=arg1.event
+                this.flagUpdate = false;
             }
             const {date} = arg1;
             
@@ -123,6 +126,7 @@ export default{
         closeModal() {
             console.log("calendar closeModal")
             this.showModal = false;
+            this.flagUpdate = true;
         },
         recortarFecha(fecha){
             const fechaOriginal = new Date(fecha);

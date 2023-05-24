@@ -81,23 +81,11 @@ export default {
     },
     methods: {
       handleEventClick(info) {
-        console.log('selected')
-        console.log(info)
-        const cal = info.event;
         
+        const cal = info.event;
+        console.log('selected SCHEDULE',cal)
         this.selectedItem = cal;
-        console.log("cal",this.selectedItem)
         this.$emit('dateClick', info,false)
-
-        /* console.log("start",cal.start)
-        console.log("title",cal.title)
-        console.log("end",cal.end)
-        console.log("link",cal.extendedProps.link)
-        console.log("description",cal.extendedProps.description)
-        console.log("description",cal.extendedProps.encargado)
-        console.log("description",cal.extendedProps.userid)
-
-        console.log("backgroundColor",cal.backgroundColor) */
 
         /* var clickX = info.jsEvent.pageX;
         var clickY = info.jsEvent.pageY;
