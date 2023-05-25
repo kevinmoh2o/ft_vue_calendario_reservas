@@ -42,7 +42,7 @@
         </div>
 
         <div class="duracion">
-          <input placeholder="Duración" type="text" name="id_agenda" v-model="indicadorTotalTime" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
+          <input placeholder="Duración" type="text" name="id_agenda" v-model="" class="text touched" size="30" maxlength="255" disabled="true" onfocus="" required="">
         </div> -->
 
         <div class="horaini">
@@ -52,17 +52,14 @@
           <label v-else class="lblOculto">{{getHoraFomString(selectedOpt.start)}}</label>
         </div>
 
-        <!-- <div class="horafin">
-          <vue-timepicker placeholder="Hasta HH:mm" close-on-complete hide-disabled-items :hour-range="[[8, 22]]" :minute-interval="10" v-model="form.horaFin" v-on:change="changeFinHour"></vue-timepicker>
-        </div> -->
-
         <div class="link">
-          <input v-if="statusButton" placeholder="Link ..." v-model="form.extendedProps.link" type="text" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" onchange="" onfocus="" required="">
-          <label v-else class="lblOculto">{{acortarTexto(form.extendedProps.link,40)}}</label>
-        </div>
+        <input v-if="statusButton" placeholder="Link ..." v-model="iLink" type="url" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" required>
+        <label v-else class="lblOculto"><a :href="form.extendedProps.link" target="_blank">{{ form.extendedProps.link }} </a></label>
+      </div>
+
 
         <div class="nota">
-          <textarea v-if="statusButton" placeholder="Nota ..." name="message" v-model="form.extendedProps.description"></textarea>
+          <textarea v-if="statusButton" placeholder="Nota ..." name="message" v-model="iDescription"></textarea>
           <label v-else class="lblOculto">{{getCommCab }}</label>
         </div>
 
@@ -76,6 +73,20 @@ import VueTimepicker from 'vue3-timepicker';
 import { Formatos } from '@/utils/Formatos.js';
 import { mapActions,mapGetters} from 'vuex'
 
+var rellenar = {
+          backgroundColor: "",
+          borderColor: "",
+          end: "",
+          extendedProps: {
+              description: "",
+              encargado:"",
+              link: "",
+              userid: "",
+          },
+          start: "",
+          title: "",
+          id:""
+      }
 
 export default {
   name: "modal-calendar",
@@ -97,38 +108,44 @@ export default {
   flagUpdateMo:{
     type:Boolean
   }
-
-  
- 
 },
   mounted: async function() {
-
+    this.actualizarFormulario();
+    this.grabar.id=this.selectedOpt.id
+    this.grabar.title=this.selectedOpt.title;
+    this.grabar.start=this.selectedOpt.fechaIni;
+    this.grabar.end=this.selectedOpt.fechaFin;
+    this.grabar.userid=this.selectedOpt.userid;
+    this.grabar.backgroundColor= this.selectedOpt.backgroundColor;
+    this.grabar.borderColor= this.selectedOpt.borderColor;
+    this.grabar.extendedProps.description= this.selectedOpt.extendedProps.description;
+    this.grabar.extendedProps.encargado= this.selectedOpt.extendedProps.encargado;
+    this.grabar.extendedProps.link= this.selectedOpt.extendedProps.link;
+    this.grabar.extendedProps.userid= this.selectedOpt.extendedProps.userid;
+    
+    console.log("this.grabar",this.grabar)
+    console.log("this.selectedOpt",this.selectedOpt)
   },
   data() {
-    
     return {
       form: this.selectedOpt,
       date:this.fechaProgramar,
+      iLink:this.selectedOpt.extendedProps.link,
+      iDescription:this.selectedOpt.extendedProps.description,
+      update:rellenar,
+      grabar:rellenar,
       horaInicioDa:{},
-      textoLinkCut:this.acortarTexto(this.selectedOpt.link,35),
       textoCommeCut:this.acortarTexto(this.selectedOpt.extendedProps.description,150),
       fFechaDeProgramacion:this.fechaProgramar,
       nombres: this.nombreOpt,
       format: 'hh:mm',
-      indicadorTotalTime:"",
       statusButton:this.estadoModalOpt
     }
   },
-  /* created() {
-    console.log("valores",this.form.title,this.nombreOpt)
-      //this.form.title = this.nombreOpt[0].nombre; // Asigna el primer nombre de la lista como valor inicial
-      this.nombreOpt.forEach((element) => {
-        if(this.form.title===element.nombre){
-          console.log(element);
-        }else{}
-        console.log(element);
-      });
-  }, */
+  created() {
+    
+
+  },
   components: {
     VueTimepicker
   },
@@ -140,6 +157,7 @@ export default {
       this.$emit('saveAppt', form);
       console.log("this.flagUpdateMo",this.flagUpdateMo)
       if(this.flagUpdateMo){
+        console.log("this.grabar",this.grabar)
             var objeto = {
             title:form.title,
             start:form.fechaIni,
@@ -161,60 +179,27 @@ export default {
           }
       }else{
         try {
-          var objetoUp = {
-            id:'',
-            title:form.title,
-            start:form.fechaIni,
-            end:Formatos.fechaZeroToDB(form.fechaFin),
-            userid:form.userid,
-            backgroundColor: "#3788D8",
-            borderColor: "darkred",
-            extendedProps:{
-              description: form.extendedProps.description,
-              encargado:form.extendedProps.encargado,
-              link:form.extendedProps.link,
-              userid:form.extendedProps.userid,
-            }
-          }
-          objetoUp.title=this.form.title;
-          objetoUp.start=this.form.fechaIni;
-          objetoUp.end=Formatos.fechaZeroToDB(this.form.fechaFin);
-          objetoUp.userid=form.userid;
-          objetoUp.backgroundColor= this.form.backgroundColor;
-          objetoUp.borderColor= this.form.borderColor;
-          objetoUp.id=this.form.id
-            await this.updateEntry(objetoUp)
+          console.log("this.update",this.update)
+            await this.updateEntry(this.update)
           } catch (error) {
             console.log("Error en update",error);
           }
       }
-      
-
       this.setIsLoading(true);
     },
     changeIniHour: function() {
-      this.setTimeView();
+      /* this.setTimeView(this.horaInicioDa); */
     },
     changeFinHour(){
-      this.setTimeView();
+      /* this.setTimeView(this.horaInicioDa); */
     },
-    setTimeView(){
-      
-      if(this.horaInicioDa.HH && this.horaInicioDa.mm){
-        
-        console.log(this.horaInicioDa)
-        this.form.fechaIni = this.horaFecha(this.fFechaDeProgramacion,this.horaInicioDa);        
-        this.form.fechaFin = this.sumarleUnaHora(this.form.fechaIni)
-        console.log("fechaIni", this.form.fechaIni)
+    setTimeView(input){
+      if(input.HH && input.mm){
+        var fecIni = this.horaFecha(this.fFechaDeProgramacion,input);        
+        var tempor = this.sumarleUnaHora(fecIni);
+        var fecFin = Formatos.fechaZeroToDB(tempor) ; 
+        return {fecIni,fecFin}
       }
-
-      
-      //this.form.fechaFin = this.horaFecha(this.fFechaDeProgramacion,this.form.horaFin);
-     /*  var consultaTime = this.diferencia;
-      this.indicadorTotalTime=(consultaTime.estado)
-        ?this.minToText(consultaTime.minutos)
-        :(this.form.horaIni==undefined || this.form.horaIni==undefined)
-            ?'':'Error'; */
     },
     minToText(minutos){
       var hor = minutos>=60?Math.floor(minutos/60):0;
@@ -266,7 +251,7 @@ export default {
       
     },
     getFechaCab(){
-      console.log("this.date",this.date,this.selectedOpt,this.fFechaDeProgramacion)
+      /* console.log("this.date",this.date,this.selectedOpt,this.fFechaDeProgramacion) */
       if(this.date!=="NaN/NaN/NaN"){
         return this.date
       }else{
@@ -275,6 +260,22 @@ export default {
         this.fFechaDeProgramacion =fechaString
         return fechaString
       }
+    },
+    actualizarFormulario(){
+      this.update.id=this.selectedOpt.id
+      this.update.title=this.selectedOpt.title;
+      this.update.start=this.selectedOpt.fechaIni;
+      this.update.end=this.selectedOpt.fechaFin;
+      this.update.userid=this.selectedOpt.userid;
+      this.update.backgroundColor= this.selectedOpt.backgroundColor;
+      this.update.borderColor= this.selectedOpt.borderColor;
+      this.update.extendedProps.description= this.selectedOpt.extendedProps.description;
+      this.update.extendedProps.encargado= this.selectedOpt.extendedProps.encargado;
+      this.update.extendedProps.link= this.selectedOpt.extendedProps.link;
+      this.update.extendedProps.userid= this.selectedOpt.extendedProps.userid;
+      
+      /* console.log("this.update",this.update)
+      console.log("this.selectedOpt",this.selectedOpt) */
     }
     
     
@@ -282,7 +283,6 @@ export default {
   computed: {    
     getHoraMin() {return `${this.horaInicioDa.HH}:${this.horaInicioDa.mm}`},
     /* getFechaCab(){return this.date?getFechaFomString():this.date}, */
-    getLinkCab (){return this.textoLinkCut},
     getCommCab (){return this.textoCommeCut},
   },
 
@@ -294,14 +294,34 @@ export default {
       },
     horaInicioDa: {
       handler(nuevaHora) {
-        console.log("nuevaHora",nuevaHora);
-        this.setTimeView()
-        //this.horaInicioDa = this.getFechaFomString()
-        // Realizar cualquier acción necesaria cuando cambie la horaInicioDa
-        // Aquí puedes agregar código adicional para actualizar otros valores o hacer llamadas a API, etc.
+        /* console.log("nuevaHora",nuevaHora); */
+        var fecha = this.setTimeView(nuevaHora)
+        if(fecha){
+          this.grabar.start=fecha.fecIni;
+          this.grabar.end  =fecha.fecFin;
+          this.update.start=fecha.fecIni;
+          this.update.end  =fecha.fecFin;
+          this.form.fechaIni = fecha.fecIni;        
+          this.form.fechaFin = fecha.fecFin;
+        }
+
+        
+        /* console.log("fecha horaInicioDa",fecha) */
       },
       deep: true,
     },
+    iLink: function (newStatus, oldStatus) {
+        console.log("Watcher iLink - Nuevo valor: ", newStatus);
+        console.log("Watcher iLink - Valor anterior: ", oldStatus);
+      this.update.extendedProps.link = newStatus;
+      this.grabar.extendedProps.link = newStatus;
+      /* console.log("this.update",this.update) */
+    },
+    iDescription: function (newStatus) {
+      this.update.extendedProps.description = newStatus;
+      this.grabar.extendedProps.description = newStatus;
+    },
+
     
   },
     
