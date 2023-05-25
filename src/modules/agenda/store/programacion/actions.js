@@ -5,18 +5,18 @@
 import investigacionApi from '@/apis/investigacionapi'
 
 export const loadEntries = async ({ commit }) => {
-    console.log("daloadEntriesta");
+    /* console.log("daloadEntriesta"); */
     var data = [];
         try {
             var respuesta = await investigacionApi.get(`/resultados.json`);
             const myObj = respuesta.data;
-            console.log(myObj);
+            /* console.log(myObj); */
             for (const key in myObj) {
                 const value = myObj[key];
                 value["id"]=key;
                 data.push(value);
             }
-            console.log(data);
+            /* console.log(data); */
             commit('setEntries', data)
             localStorage.setItem('entries', JSON.stringify(data));
           } catch (error) {

@@ -2,10 +2,7 @@
     <div v-if="true">
         <div v-if="getEstado()">
             <div class="div1">
-                
-                <Suspense>
                     <Calendar @dateClick="dateClick" @editarPadre="escucharHijo"></Calendar>
-                </Suspense>
             </div>
             <div class="div2">
                 <CalendarModal v-if="showModal" 
@@ -70,14 +67,15 @@ export default{
         ...mapGetters('programacionModule', ['getEstado']),
         dateClick(arg1,arg2) {
             this.showModal = true;
+            this.flagUpdate = true;
             console.log('Recibiendo datos arg1: ', arg1);
             console.log('Recibiendo datos arg2: ', arg2);
-            this.flagUpdate = true;
+            
             if(arg2){
                 console.log("Crear nuevo programa")
                 this.itemVar={
-                    backgroundColor: "#607FF2",
-                    borderColor: "#C4DBFA",
+                    backgroundColor: "#FD1F64",
+                    borderColor: "#FD1F64",
                     end: "",
                     extendedProps: {
                         description: "",
@@ -96,10 +94,10 @@ export default{
             }
             const {date} = arg1;
             
-            console.log('itemVar: ', this.itemVar);
+            /* console.log('itemVar: ', this.itemVar); */
 
             this.fechaProgramar=arg1.dateStr;
-            console.log("this.fechaProgramar",this.fechaProgramar)
+            /* console.log("this.fechaProgramar",this.fechaProgramar) */
             this.estadoModalOptPa=arg2;
             this.fechaProgramar=Formatos.soloFechaDMY(date);
 
@@ -193,7 +191,7 @@ export default{
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .div1{
     z-index: 1;

@@ -25,10 +25,10 @@ const options = reactive({
     editable:true,
     selectable:true,
     weekends:true,
-    dateClick:(arg)=>{
+    /* dateClick:(arg)=>{
         console.log("dateClick")
         console.log(arg)
-    },
+    }, */
     select:(arg)=>{
         id.value = id.value + 1;
         const cal = arg.view.calendar;

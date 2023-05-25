@@ -54,6 +54,12 @@ const routes = [{
         name: 'confirmation-dialog',
         component: () =>
             import ( /* webpackChunkName: "about" */ '@/modules/agenda/components/Confirmacion.vue')
+    },
+    {
+        path: '/calendar-before',
+        name: 'calendar-before',
+        component: () =>
+            import ( /* webpackChunkName: "about" */ '@/components/EventCalendar.vue')
     }
 ]
 

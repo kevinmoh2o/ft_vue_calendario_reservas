@@ -1,19 +1,9 @@
 <template>
-    <div>
-      <Fullcalendar ref="fullCalendar" :options="calendarOptions">
-        
-        <template v-slot:eventContent='arg' >
-          <div class="column-container" >
-            <b>{{ arg.event.title }}</b>
-            <div> 
-              <CalendarModal3  @editarModal="editarModal" @closeModal="closeModal"
-              @eliminarM3="eliminarM3"></CalendarModal3>
-            </div>
-          </div>
-        </template>
-      </Fullcalendar>
-    </div>
-  </template>
+  <div class="column-container">
+    <Fullcalendar ref="fullCalendar" :options="calendarOptions" class="full-calendar" />
+  </div>
+</template>
+
   
   <script>
   import '@fullcalendar/core'
@@ -23,19 +13,13 @@
   import listPlugin from '@fullcalendar/list'
   import interactionPlugin from '@fullcalendar/interaction'
   import esLocale from "@fullcalendar/core/locales/es";
-  //import CalendarModal2 from "@/modules/agenda/components/CalendarModal2.vue";
-  import CalendarModal3 from "@/modules/agenda/components/CalendarModal3.vue";
-  //import { Dialogs } from 'v-dialogs'
   import { mapActions, mapState ,mapGetters,mapMutations} from 'vuex'
-//import { ref } from 'vue';
+
 
 export default {
     name: 'calendario-dos',
     components: {
         Fullcalendar,
-        //CalendarModal2,
-        CalendarModal3,
-        //Dialogs
     },
 
     data() {
@@ -44,9 +28,9 @@ export default {
                 initialView: 'dayGridMonth',
                 locale: esLocale,
                 headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'timeGridWeek,dayGridMonth,listDay',
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'timeGridDay,timeGridWeek,dayGridMonth,listDay',
                 },
                 allDaySlot: false,
                 nowIndicator: true,
@@ -67,6 +51,22 @@ export default {
                   console.log('eventRemove')
                   console.log(arg)
                 },
+                viewDidMount: function () {
+                  // Obtener el elemento del encabezado de la columna
+                  const columnHeaders = document.querySelectorAll('.fc-col-header-cell');
+
+                  // Obtener el elemento del encabezado del día de la semana
+                  const dayHeaders = document.querySelectorAll('.fc-day-header');
+
+                  // Quitar el subrayado de los nombres de las columnas y los días de la semana
+                  columnHeaders.forEach((header) => {
+                    header.style.textDecoration = 'none';
+                  });
+
+                  dayHeaders.forEach((header) => {
+                    header.style.textDecoration = 'none';
+                  });
+                },
                 //eventClick: handleEventClick,
                 //eventContent: eventContent
             };
@@ -80,22 +80,11 @@ export default {
       }
     },
     methods: {
-      handleEventClick(info) {
-        
+      handleEventClick(info) { 
         const cal = info.event;
         console.log('selected SCHEDULE',cal)
         this.selectedItem = cal;
         this.$emit('dateClick', info,false)
-
-        /* var clickX = info.jsEvent.pageX;
-        var clickY = info.jsEvent.pageY;
-        
-        // calcula la posición del modal
-        var modalX = clickX + 20; // ajuste el número 20 a la distancia que desee del clic
-        var modalY = clickY + 20; // ajuste el número 20 a la distancia que desee del clic
-        
-        // abre el modal en la posición calculada */
-        //this.showModal = !this.showModal;
       },
         handleDateclick(clickInfo) {
             this.$emit('dateClick', clickInfo,true)
@@ -141,7 +130,6 @@ export default {
       } */
     },
     async created() {
-      
       await this.loadEntries();
       this.calendarOptions.events = this.getentriesTest();
     }, 
@@ -152,107 +140,33 @@ export default {
       getEventsWatch() {
         this.calendarOptions.events = this.getEvents();
       }
-      
     }
 
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
 .column-container {
   display: flex;
   flex-direction: column;
 }
+
+
+
+/* 
+.full-calendar .fc-col-header-cell a,
+.full-calendar .fc-day-header a {
+  text-decoration: none !important;
+} */
 </style>
 
   
-/*   
-const { getEvents,setEvents } = modeloEvents();
-  
-  export default {
-    name: 'calendario-dos',
-    components: {
-      Fullcalendar,
-    },
-    methods: {
-        ...mapActions('journal', ['loadEntries'])
-    },
-    computed: {
-        ...mapState( 'journal', ['isLoading'])
-    },
-    created() {
-        this.loadEntries()
-    },
-    setup() {
-
-      const calendarOptions = reactive({
-        plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-        initialView: 'dayGridMonth',
-        locale: esLocale,
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,dayGridWeek,listDay',
-        },
-        editable: true,
-        selectable: true,
-        weekends: true,
-        dateClick: (arg) => {
-          console.log('dateClick')
-          console.log(arg)
-        },
-        select: (arg) => {
-          console.log('select')
-          console.log(arg)
-        },
-        eventClick: (arg) => {
-          console.log('eventClick')
-          console.log(arg)
-        },
-        events: [],
-        eventAdd: (arg) => {
-          console.log('create')
-          console.log(arg)
-        },
-        eventChange: (arg) => {
-          console.log('eventChange')
-          console.log(arg)
-        },
-        eventRemove: (arg) => {
-          console.log('eventRemove')
-          console.log(arg)
-        },
-        
-      })
-  
-      watch(getEvents, (valor) => {
-        
-        console.log(valor);
-        
-        calendarOptions.events = [
-            {
-                "id": "asdasdasdf",
-                "backgroundColor": "#4286f4",
-                "title": "Cumpleaños de Ana",
-                "end": "2023-05-10T21:00:00",
-                "start": "2023-05-10T18:00:00",
-                "description": "Celebración del cumpleaños de Ana en su casa"
-            }
-        ]
-        console.log("despues: ");
-        console.log(calendarOptions.events);
-        console.log(calendarOptions.events[0]);
-      })
-        onMounted( () => {
-        console.log('Component mounted!')
-        console.log( setEvents("agenda"))
-        })
-  
-      return {
-        calendarOptions,
-        
-      }
-    },
-  }
-   */
+<!-- {
+  id: 1,
+  title: 'Evento 1',
+  start: '2023-05-01',
+  end: '2023-05-01',
+  backgroundColor: '#1f64fd',
+  borderColor: '#039555',
+  textColor: 'white',
+} -->

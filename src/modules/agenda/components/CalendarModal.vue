@@ -29,7 +29,7 @@
         </div>
 
         <div class="selecpatient">
-          <select v-if="statusButton && flagUpdateMo" class="entradaStyle" name="idSelector" id="idSelector" v-model="form.title" onchange="" required="true">
+          <select v-if="statusButton && flagUpdateMo" class="entradaStyle" name="idSelector" id="idSelector" v-model="iPaciente" onchange="" required="true">
             <option value="" selected>Selecciona un paciente</option>
             <option v-for="nombre in nombres" :key="nombre.id" :value="nombre.nombre">{{ nombre.nombre }}</option>
           </select>
@@ -53,9 +53,12 @@
         </div>
 
         <div class="link">
-        <input v-if="statusButton" placeholder="Link ..." v-model="iLink" type="url" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" required>
-        <label v-else class="lblOculto"><a :href="form.extendedProps.link" target="_blank">{{ form.extendedProps.link }} </a></label>
-      </div>
+          <input v-if="statusButton" placeholder="Link ..." v-model="iLink" type="url" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" required>
+          <label v-else class="lblOculto">
+            <a v-if="form.extendedProps.link.length > 40" :href="form.extendedProps.link" target="_blank">{{ form.extendedProps.link.substring(0, 40) }}...</a>
+            <a v-else :href="form.extendedProps.link" target="_blank">{{ form.extendedProps.link }}</a>
+          </label>
+        </div>
 
 
         <div class="nota">
@@ -111,17 +114,8 @@ export default {
 },
   mounted: async function() {
     this.actualizarFormulario();
-    this.grabar.id=this.selectedOpt.id
-    this.grabar.title=this.selectedOpt.title;
-    this.grabar.start=this.selectedOpt.fechaIni;
-    this.grabar.end=this.selectedOpt.fechaFin;
-    this.grabar.userid=this.selectedOpt.userid;
-    this.grabar.backgroundColor= this.selectedOpt.backgroundColor;
-    this.grabar.borderColor= this.selectedOpt.borderColor;
-    this.grabar.extendedProps.description= this.selectedOpt.extendedProps.description;
-    this.grabar.extendedProps.encargado= this.selectedOpt.extendedProps.encargado;
-    this.grabar.extendedProps.link= this.selectedOpt.extendedProps.link;
-    this.grabar.extendedProps.userid= this.selectedOpt.extendedProps.userid;
+    this.grabarFormularioInit()
+    
     
     console.log("this.grabar",this.grabar)
     console.log("this.selectedOpt",this.selectedOpt)
@@ -132,6 +126,7 @@ export default {
       date:this.fechaProgramar,
       iLink:this.selectedOpt.extendedProps.link,
       iDescription:this.selectedOpt.extendedProps.description,
+      iPaciente:this.selectedOpt.title,
       update:rellenar,
       grabar:rellenar,
       horaInicioDa:{},
@@ -158,22 +153,8 @@ export default {
       console.log("this.flagUpdateMo",this.flagUpdateMo)
       if(this.flagUpdateMo){
         console.log("this.grabar",this.grabar)
-            var objeto = {
-            title:form.title,
-            start:form.fechaIni,
-            end:Formatos.fechaZeroToDB(form.fechaFin),
-            userid:form.userid,
-            backgroundColor: "#3788D8",
-            borderColor: "darkred",
-            extendedProps:{
-              description: form.extendedProps.description,
-              encargado:form.extendedProps.encargado,
-              link:form.extendedProps.link,
-              userid:form.extendedProps.userid,
-            }
-          }
           try {
-            await this.createEntry(objeto)
+            await this.createEntry(this.grabar)
           } catch (error) {
             console.log("Error en creacion",error);
           }
@@ -276,6 +257,19 @@ export default {
       
       /* console.log("this.update",this.update)
       console.log("this.selectedOpt",this.selectedOpt) */
+    },
+    grabarFormularioInit(){
+      this.grabar.id=this.selectedOpt.id
+      this.grabar.title=this.selectedOpt.title;
+      this.grabar.start=this.selectedOpt.fechaIni;
+      this.grabar.end=this.selectedOpt.fechaFin;
+      this.grabar.userid=this.selectedOpt.userid;
+      this.grabar.backgroundColor= this.selectedOpt.backgroundColor;
+      this.grabar.borderColor= this.selectedOpt.borderColor;
+      this.grabar.extendedProps.description= this.selectedOpt.extendedProps.description;
+      this.grabar.extendedProps.encargado= this.selectedOpt.extendedProps.encargado;
+      this.grabar.extendedProps.link= this.selectedOpt.extendedProps.link;
+      this.grabar.extendedProps.userid= this.selectedOpt.extendedProps.userid;
     }
     
     
@@ -287,9 +281,9 @@ export default {
   },
 
   watch:{
-    estadoModalOpt: function (newStatus, oldStatus) {
-        console.log("Watcher estadoModalOpt - Nuevo valor: ", newStatus);
-        console.log("Watcher estadoModalOpt - Valor anterior: ", oldStatus);
+    estadoModalOpt: function (newStatus) {
+        /* console.log("Watcher estadoModalOpt - Nuevo valor: ", newStatus);
+        console.log("Watcher estadoModalOpt - Valor anterior: ", oldStatus); */
         this.statusButton = newStatus;
       },
     horaInicioDa: {
@@ -304,15 +298,12 @@ export default {
           this.form.fechaIni = fecha.fecIni;        
           this.form.fechaFin = fecha.fecFin;
         }
-
-        
-        /* console.log("fecha horaInicioDa",fecha) */
       },
       deep: true,
     },
-    iLink: function (newStatus, oldStatus) {
-        console.log("Watcher iLink - Nuevo valor: ", newStatus);
-        console.log("Watcher iLink - Valor anterior: ", oldStatus);
+    iLink: function (newStatus) {
+      /* console.log("Watcher iLink - Nuevo valor: ", newStatus);
+      console.log("Watcher iLink - Valor anterior: ", oldStatus); */
       this.update.extendedProps.link = newStatus;
       this.grabar.extendedProps.link = newStatus;
       /* console.log("this.update",this.update) */
@@ -321,6 +312,10 @@ export default {
       this.update.extendedProps.description = newStatus;
       this.grabar.extendedProps.description = newStatus;
     },
+    iPaciente:function(newStatus){
+      this.update.title = newStatus;
+      this.grabar.title = newStatus;
+    },
 
     
   },
@@ -328,7 +323,7 @@ export default {
 };
 </script>
   
-<style scoped>
+<style lang="scss" scoped>
 
 /* Or, with node_module alias path like: */
 @import '~vue3-timepicker/dist/VueTimepicker.css';
