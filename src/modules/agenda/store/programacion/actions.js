@@ -4,11 +4,12 @@
 // }
 import investigacionApi from '@/apis/investigacionapi'
 
-export const loadEntries = async ({ commit }) => {
+export const loadEntries = async ({ commit },groupId) => {
     /* console.log("daloadEntriesta"); */
+    var path = `resultados.json?orderBy="groupId"&equalTo="${groupId}"`;
     var data = [];
         try {
-            var respuesta = await investigacionApi.get(`/resultados.json`);
+            var respuesta = await investigacionApi.get(path);
             const myObj = respuesta.data;
             /* console.log(myObj); */
             for (const key in myObj) {

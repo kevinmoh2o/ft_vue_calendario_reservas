@@ -28,3 +28,17 @@ npm install --save @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegr
 yarn add v-calendar
 npm install -g json-server
 json-server --watch json/data.json --port 3011
+
+# Rules
+{
+  "rules": {
+    "resultados": {
+      ".indexOn": ["groupId"],
+      ".read": true,
+      ".write": true,
+      "$docId": {
+        ".read": "data.child('groupId').val() == 'pelar'"
+      }
+    }
+  }
+}

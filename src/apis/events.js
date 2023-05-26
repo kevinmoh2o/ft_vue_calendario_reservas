@@ -1,9 +1,11 @@
 const baseURL ='http://localhost:3011'
 
+
 export const fetchEvents = async() => {
     const response = await fetch(`${baseURL}/events`);
     return await response.json(); 
 }
+
 
 export const storeEvent = async(event) => {
     return await fetch(`${baseURL}/events`,{
@@ -15,6 +17,7 @@ export const storeEvent = async(event) => {
     }) 
 }
 
+
 export const mutateEvent = async(event,id) => {
     return await fetch(`${baseURL}/events/${id}`,{
         method:'PUT',
@@ -24,6 +27,7 @@ export const mutateEvent = async(event,id) => {
         body: JSON.stringify(event)
     }) 
 }
+
 
 export const destroyEvent = async(event,id) => {
     return await fetch(`${baseURL}/events/${id}`,{

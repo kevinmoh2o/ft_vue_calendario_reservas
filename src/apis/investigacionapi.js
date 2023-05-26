@@ -1,8 +1,9 @@
 import axios from 'axios'
 
+const apiUrl = process.env.VUE_APP_API_URL;
 
 const investigacionApi = axios.create({
-    baseURL: 'https://luna-covid-efwqev.firebaseio.com'
+    baseURL: apiUrl
 })
 
 export default investigacionApi

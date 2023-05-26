@@ -22,7 +22,7 @@
 
         <div class="automatico">
           <br>
-          <label><strong>Licenciado a cargo:</strong></label><label class="lblClass">{{ acortarTexto(selectedOpt.extendedProps.encargado,15) }}</label><br>
+          <label><strong>Lic. a cargo:</strong></label><label class="lblClass">{{ acortarTexto(selectedOpt.extendedProps.encargado,20) }}</label><br>
           <label><strong>Fecha de cita:</strong></label><label class="lblClass"> {{getFechaCab()}}</label><br>
           <label><strong>Duracion:</strong></label><label class="lblClass"> 1 hora</label><br>
           <hr>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="link">
-          <input v-if="statusButton" placeholder="Link ..." v-model="iLink" type="url" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" required>
+          <input v-if="statusButton" placeholder="Linkde reunión ..." v-model="iLink" type="url" name="id_agenda" id="id_agenda" class="entradaStyle" size="30" maxlength="255" required>
           <label v-else class="lblOculto">
             <a v-if="form.extendedProps.link.length > 40" :href="form.extendedProps.link" target="_blank">{{ form.extendedProps.link.substring(0, 40) }}...</a>
             <a v-else :href="form.extendedProps.link" target="_blank">{{ form.extendedProps.link }}</a>
@@ -84,8 +84,8 @@ var rellenar = {
               description: "",
               encargado:"",
               link: "",
-              userid: "",
           },
+          groupId:"",
           start: "",
           title: "",
           id:""
@@ -247,13 +247,13 @@ export default {
       this.update.title=this.selectedOpt.title;
       this.update.start=this.selectedOpt.fechaIni;
       this.update.end=this.selectedOpt.fechaFin;
-      this.update.userid=this.selectedOpt.userid;
+      this.update.groupId=this.selectedOpt.groupId;
       this.update.backgroundColor= this.selectedOpt.backgroundColor;
       this.update.borderColor= this.selectedOpt.borderColor;
       this.update.extendedProps.description= this.selectedOpt.extendedProps.description;
       this.update.extendedProps.encargado= this.selectedOpt.extendedProps.encargado;
       this.update.extendedProps.link= this.selectedOpt.extendedProps.link;
-      this.update.extendedProps.userid= this.selectedOpt.extendedProps.userid;
+      
       
       /* console.log("this.update",this.update)
       console.log("this.selectedOpt",this.selectedOpt) */
@@ -263,13 +263,12 @@ export default {
       this.grabar.title=this.selectedOpt.title;
       this.grabar.start=this.selectedOpt.fechaIni;
       this.grabar.end=this.selectedOpt.fechaFin;
-      this.grabar.userid=this.selectedOpt.userid;
+      this.grabar.groupId=this.selectedOpt.groupId;
       this.grabar.backgroundColor= this.selectedOpt.backgroundColor;
       this.grabar.borderColor= this.selectedOpt.borderColor;
       this.grabar.extendedProps.description= this.selectedOpt.extendedProps.description;
       this.grabar.extendedProps.encargado= this.selectedOpt.extendedProps.encargado;
       this.grabar.extendedProps.link= this.selectedOpt.extendedProps.link;
-      this.grabar.extendedProps.userid= this.selectedOpt.extendedProps.userid;
     }
     
     

@@ -2,7 +2,7 @@
     <div v-if="true">
         <div v-if="getEstado()">
             <div class="div1">
-                    <Calendar @dateClick="dateClick" @editarPadre="escucharHijo"></Calendar>
+                    <Calendar @dateClick="dateClick" @editarPadre="escucharHijo" :usuario="userId"></Calendar>
             </div>
             <div class="div2">
                 <CalendarModal v-if="showModal" 
@@ -39,8 +39,14 @@ export default{
         Confirmacion: defineAsyncComponent(() => import('./components/Confirmacion.vue')),
 
     },
+    created() {
+        this.licenciado ='Kevin Montañez Huamán';//"Pedro Laredo Chuquispuma"
+        this.userId = 'kbmont';
+    }, 
     data() {
         return {
+            licenciado:'',
+            userId:'',
             flagUpdate:false,
             eliminatedId:'',
             confirmacionOperation:false,
@@ -68,8 +74,10 @@ export default{
         dateClick(arg1,arg2) {
             this.showModal = true;
             this.flagUpdate = true;
+            
             console.log('Recibiendo datos arg1: ', arg1);
             console.log('Recibiendo datos arg2: ', arg2);
+
             
             if(arg2){
                 console.log("Crear nuevo programa")
@@ -79,10 +87,10 @@ export default{
                     end: "",
                     extendedProps: {
                         description: "",
-                        encargado:"Pedro Laredo Chuquispuma",
+                        encargado:this.licenciado,
                         link: "",
-                        userid: "pelar",
                     },
+                    groupId: this.userId,
                     start: "",
                     title: "",
                     id:""
@@ -94,7 +102,7 @@ export default{
             }
             const {date} = arg1;
             
-            /* console.log('itemVar: ', this.itemVar); */
+            console.log('itemVar: ', this.itemVar);
 
             this.fechaProgramar=arg1.dateStr;
             /* console.log("this.fechaProgramar",this.fechaProgramar) */

@@ -1,6 +1,7 @@
 import { collection, addDoc,query,onSnapshot } from "firebase/firestore";
 import { firestore } from "@/firebase";
 
+
 export const storeEvent = async (tabla, registro) => {
   try {
     const docRef = await addDoc(collection(firestore, tabla), registro);
@@ -11,8 +12,8 @@ export const storeEvent = async (tabla, registro) => {
   }
 };
 
-export const fetchEvents = async (tabla) => {
 
+export const fetchEvents = async (tabla) => {
     const q = query(collection(firestore, tabla));
     try {
         const results = [];
@@ -20,7 +21,6 @@ export const fetchEvents = async (tabla) => {
             element.forEach((doc) => {
                 results.push({ id: doc.id, ...doc.data() });
             });
-            //this.user=results
         });
         return results;
         } catch (e) {

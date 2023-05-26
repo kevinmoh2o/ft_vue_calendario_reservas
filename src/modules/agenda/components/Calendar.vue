@@ -21,6 +21,12 @@ export default {
     components: {
         Fullcalendar,
     },
+    props:{
+      usuario:{
+        type: String,
+        required: true
+      },
+    },
 
     data() {
       const  calendarOptions= {
@@ -50,22 +56,6 @@ export default {
                 eventRemove: (arg) => {
                   console.log('eventRemove')
                   console.log(arg)
-                },
-                viewDidMount: function () {
-                  // Obtener el elemento del encabezado de la columna
-                  const columnHeaders = document.querySelectorAll('.fc-col-header-cell');
-
-                  // Obtener el elemento del encabezado del día de la semana
-                  const dayHeaders = document.querySelectorAll('.fc-day-header');
-
-                  // Quitar el subrayado de los nombres de las columnas y los días de la semana
-                  columnHeaders.forEach((header) => {
-                    header.style.textDecoration = 'none';
-                  });
-
-                  dayHeaders.forEach((header) => {
-                    header.style.textDecoration = 'none';
-                  });
                 },
                 //eventClick: handleEventClick,
                 //eventContent: eventContent
@@ -130,7 +120,7 @@ export default {
       } */
     },
     async created() {
-      await this.loadEntries();
+      await this.loadEntries(this.usuario);
       this.calendarOptions.events = this.getentriesTest();
     }, 
     watch: {
